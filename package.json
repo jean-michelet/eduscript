@@ -1,0 +1,25 @@
+{
+  "name": "create-programing-language",
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "yarn@3.6.1",
+  "scripts": {
+    "test": "jest --testPathPattern=src/",
+    "watch": "npm run clean && tsc --watch",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf dist",
+    "standard": "ts-standard --fix"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.6.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "ts-standard": "^12.0.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "ts-migrate": "^0.1.35"
+  }
+}
