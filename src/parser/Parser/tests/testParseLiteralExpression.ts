@@ -8,7 +8,7 @@ export default function (): void {
 
       expect(expr).toBeInstanceOf(LiteralExpression)
 
-      expect(expr.kind).toBe('Number')
+      expect(expr.kind).toBe('number')
       expect(expr.literal).toBe(1)
     })
 
@@ -17,7 +17,7 @@ export default function (): void {
 
       expect(expr).toBeInstanceOf(LiteralExpression)
 
-      expect(expr.kind).toBe('String')
+      expect(expr.kind).toBe('string')
       expect(expr.literal).toBe('hello world')
     })
 
@@ -26,12 +26,12 @@ export default function (): void {
 
       expect(expr).toBeInstanceOf(LiteralExpression)
 
-      expect(expr.kind).toBe('Boolean')
+      expect(expr.kind).toBe('boolean')
       expect(expr.literal).toBe(true)
 
       expr = parseExpression('false;') as LiteralExpression
 
-      expect(expr.kind).toBe('Boolean')
+      expect(expr.kind).toBe('boolean')
       expect(expr.literal).toBe(false)
     })
   })

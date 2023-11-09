@@ -4,7 +4,11 @@ import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression, { PrimaryExpression } from './Expression.js'
 
 export type MathOperator = '+' | '-' | '/' | '*'
-export type BinaryOperator = MathOperator
+export type RelationalOperator = '>' | '<' | '>=' | '<='
+export type EqualityOperator = '==' | '!='
+export type LogicalOperator = '&&' | '||'
+
+export type BinaryOperator = MathOperator | RelationalOperator | EqualityOperator | LogicalOperator
 
 export default class BinaryExpression extends Expression {
   public readonly operator: BinaryOperator

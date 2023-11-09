@@ -3,8 +3,8 @@ import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from './Expression.js'
 
-export type Literal = string | number | boolean
-export type LiteralKind = 'String' | 'Number' | 'Boolean'
+export type Literal = string | number | boolean | null
+export type LiteralKind = 'string' | 'number' | 'boolean' | 'null'
 
 export default class LiteralExpression extends Expression {
   public readonly literal: Literal
@@ -22,11 +22,11 @@ export default class LiteralExpression extends Expression {
 
     let kind: LiteralKind
     if (tokenType === TokenType.NUMBER) {
-      kind = 'Number'
+      kind = 'number'
     } else if (tokenType === TokenType.STRING) {
-      kind = 'String'
+      kind = 'string'
     } else {
-      kind = 'Boolean'
+      kind = 'boolean'
     }
 
     parser.consume(tokenType)
