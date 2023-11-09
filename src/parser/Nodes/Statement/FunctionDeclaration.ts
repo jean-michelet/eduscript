@@ -1,5 +1,5 @@
 import { Context } from '../../Parser/ContextStack.js'
-import { NodeParser } from '../../Parser/Parser.js'
+import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import AssignmentPattern from '../Expression/AssignmentPattern.js'
@@ -19,7 +19,7 @@ export default class FunctionDeclaration extends Statement {
     this.body = body
   }
 
-  static fromParser (parser: NodeParser): FunctionDeclaration {
+  static fromParser (parser: AbstractNodeParser): FunctionDeclaration {
     parser.consume(TokenType.FN)
     const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
 

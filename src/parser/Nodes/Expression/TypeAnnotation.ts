@@ -1,4 +1,4 @@
-import { NodeParser } from '../../Parser/Parser.js'
+import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import AstNode, { AST_NODE_TYPE } from '../AstNode.js'
 import Identifier from './Identifier.js'
@@ -13,7 +13,7 @@ export class TypeAnnotation extends AstNode {
     this.typedef = typedef
   }
 
-  static fromParser (parser: NodeParser): TypeAnnotation {
+  static fromParser (parser: AbstractNodeParser): TypeAnnotation {
     parser.consume(TokenType.COLON)
 
     const token = parser.consume()

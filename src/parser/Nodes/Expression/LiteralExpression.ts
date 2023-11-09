@@ -1,4 +1,4 @@
-import { NodeParser } from '../../Parser/Parser.js'
+import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from './Expression.js'
@@ -16,7 +16,7 @@ export default class LiteralExpression extends Expression {
     this.kind = kind
   }
 
-  static fromParser (parser: NodeParser): LiteralExpression {
+  static fromParser (parser: AbstractNodeParser): LiteralExpression {
     const tokenType = parser.getLookahead().type
     const value = parser.getLookahead().value as Literal
 

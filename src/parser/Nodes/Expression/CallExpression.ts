@@ -1,4 +1,4 @@
-import { NodeParser } from '../../Parser/Parser.js'
+import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from './Expression.js'
@@ -15,7 +15,7 @@ export default class CallExpression extends Expression {
     this.args = args
   }
 
-  static fromParser (parser: NodeParser, id: Identifier | MemberExpression): CallExpression {
+  static fromParser (parser: AbstractNodeParser, id: Identifier | MemberExpression): CallExpression {
     parser.consume(TokenType.LEFT_PAREN)
 
     const args: Expression[] = []

@@ -1,4 +1,4 @@
-import { NodeParser } from '../../../Parser/Parser.js'
+import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import AssignmentPattern from '../../Expression/AssignmentPattern.js'
 import Identifier from '../../Expression/Identifier.js'
@@ -29,7 +29,7 @@ export default class MethodDefinition extends Statement {
     this.visibility = visibility
   }
 
-  static fromParser (parser: NodeParser,
+  static fromParser (parser: AbstractNodeParser,
     isStatic: boolean,
     visibility: CLASS_MEMBER_VISIBILITY): MethodDefinition {
     const fn = FunctionDeclaration.fromParser(parser)

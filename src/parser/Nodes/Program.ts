@@ -1,5 +1,5 @@
 import { Context } from '../Parser/ContextStack.js'
-import { NodeParser } from '../Parser/Parser.js'
+import AbstractNodeParser from '../Parser/AbstractNodeParser.js'
 import AstNode, { AST_NODE_TYPE } from './AstNode.js'
 import BlockStatement from './Statement/BlockStatement.js'
 import Statement from './Statement/Statement.js'
@@ -13,7 +13,7 @@ export default class Program extends AstNode {
     this.body = body
   }
 
-  static fromParser (parser: NodeParser): Program {
+  static fromParser (parser: AbstractNodeParser): Program {
     parser.contextStack.enter(Context.TOP)
 
     let statements: Statement[] = []

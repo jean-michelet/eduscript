@@ -1,4 +1,4 @@
-import { NodeParser } from '../../../Parser/Parser.js'
+import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Identifier from '../../Expression/Identifier.js'
@@ -17,7 +17,7 @@ export default class ClassDeclaration extends Statement {
     this.body = body
   }
 
-  static fromParser (parser: NodeParser): ClassDeclaration {
+  static fromParser (parser: AbstractNodeParser): ClassDeclaration {
     parser.consume(TokenType.CLASS)
     const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
 
