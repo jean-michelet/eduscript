@@ -13,12 +13,6 @@ export default class Scanner implements ScannerInterface {
   private _line = 1
   private readonly _whitespaceChars = [' ', '\r', '\t', '\n']
 
-  private readonly _specialChars = [
-    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-    '-', '_', '=', '+', '{', '}', '[', ']', '|', '\\',
-    ':', ';', '\'', '"', ',', '<', '.', '>', '/', '?', '`', '~'
-  ]
-
   init (src: string = ''): void {
     this._src = src
     this._startTokenPos = 0
@@ -316,7 +310,7 @@ export default class Scanner implements ScannerInterface {
 
   private _string (): Token {
     this._advance()
-    while (this._isValidChar(this._peek()) && this._peek() !== '"') {
+    while (this._peek() !== '"') {
       this._advance()
     }
 
@@ -404,10 +398,6 @@ export default class Scanner implements ScannerInterface {
 
   private _isWhitespaceChar (char: string): boolean {
     return this._whitespaceChars.includes(char)
-  }
-
-  private _isValidChar (char: string): boolean {
-    return this._isAlpha(char) || this._isWhitespaceChar(char) || this._specialChars.includes(char)
   }
 
   private _atEnd (): boolean {
