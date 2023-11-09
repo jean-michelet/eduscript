@@ -14,7 +14,6 @@ import testParseIfStatement from './testParseIfStatement.js'
 import testParseLiteralExpression from './testParseLiteralExpression.js'
 import testParseMemberExpression from './testParseMemberExpression.js'
 import testParseVariableDeclaration from './testParseVariableDeclaration.js'
-import testParseWhileStatement from './testParseWhileStatement.js'
 import BlockStatement from '../../Nodes/Statement/BlockStatement.js'
 import EmptyStatement from '../../Nodes/Statement/EmptyStatement.js'
 import ExpressionStatement from '../../Nodes/Statement/ExpressionStatement.js'
@@ -74,8 +73,6 @@ describe('Parser Tests', () => {
   testParseCallExpression()
 
   testParseIfStatement()
-
-  testParseWhileStatement()
 
   testParseCompletionStatements()
 

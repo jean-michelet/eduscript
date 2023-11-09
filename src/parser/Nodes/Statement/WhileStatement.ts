@@ -8,12 +8,12 @@ import Statement from './Statement.js'
 
 export default class WhileStatement extends Statement {
   public readonly test: Expression
-  public readonly body: BlockStatement
+  public readonly consequent: BlockStatement
 
-  constructor (test: Expression, body: BlockStatement) {
+  constructor (test: Expression, consequent: BlockStatement) {
     super(AST_NODE_TYPE.WHILE_STATEMENT)
     this.test = test
-    this.body = body
+    this.consequent = consequent
   }
 
   static fromParser (parser: Parser): WhileStatement {

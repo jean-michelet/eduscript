@@ -124,11 +124,13 @@ export default class Scanner implements ScannerInterface {
           this._advance()
           return this._createToken(TokenType.LOGICAL_AND)
         }
+        break
       case '|':
         if (this._peek() === '|') {
           this._advance()
           return this._createToken(TokenType.LOGICAL_OR)
         }
+        break
       // assignment operators
       case '=':
         if (this._peek() === '=') {

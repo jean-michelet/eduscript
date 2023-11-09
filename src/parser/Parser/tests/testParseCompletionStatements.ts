@@ -69,7 +69,7 @@ export default function (): void {
       expect(stmts).toHaveLength(1)
 
       const whileStatement = stmts[0] as WhileStatement
-      const breakStmt = whileStatement.body.statements[0]
+      const breakStmt = whileStatement.consequent.statements[0]
 
       expect(breakStmt).toBeInstanceOf(BreakStatement)
     })
@@ -84,7 +84,7 @@ export default function (): void {
       expect(stmts[0]).toBeInstanceOf(WhileStatement)
 
       const whileStatement = stmts[0] as WhileStatement
-      const breakStmt = whileStatement.body.statements[0] as BreakStatement
+      const breakStmt = whileStatement.consequent.statements[0] as BreakStatement
 
       expect(breakStmt.level).toBe(2)
     })
@@ -128,7 +128,7 @@ export default function (): void {
       expect(stmts).toHaveLength(1)
 
       const whileStatement = stmts[0] as WhileStatement
-      const continueSttmt = whileStatement.body.statements[0]
+      const continueSttmt = whileStatement.consequent.statements[0]
 
       expect(continueSttmt).toBeInstanceOf(ContinueStatement)
     })
@@ -143,7 +143,7 @@ export default function (): void {
       expect(stmts[0]).toBeInstanceOf(WhileStatement)
 
       const whileStatement = stmts[0] as WhileStatement
-      const continueStmt = whileStatement.body.statements[0] as BreakStatement
+      const continueStmt = whileStatement.consequent.statements[0] as BreakStatement
 
       expect(continueStmt.level).toBe(2)
     })
