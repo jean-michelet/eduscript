@@ -26,7 +26,11 @@ import BinaryExpression from '../Nodes/Expression/BinaryExpression.js'
 import LiteralExpression from '../Nodes/Expression/LiteralExpression.js'
 import Identifier from '../Nodes/Expression/Identifier.js'
 
-export default class Parser {
+export interface ParserInterface {
+  parse: (input: string) => Program
+}
+
+export default class Parser implements ParserInterface {
   private readonly nodeParser: NodeParser
 
   constructor (scanner: ScannerInterface) {
