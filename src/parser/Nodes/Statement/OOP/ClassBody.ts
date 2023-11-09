@@ -1,4 +1,4 @@
-import Parser from '../../../Parser/Parser.js'
+import { NodeParser } from '../../../Parser/Parser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Statement from '../Statement.js'
@@ -21,7 +21,7 @@ export default class ClassBody extends Statement {
     this.statements = statements
   }
 
-  static fromParser (parser: Parser): ClassBody {
+  static fromParser (parser: NodeParser): ClassBody {
     parser.consume(TokenType.LEFT_CBRACE)
 
     const stmts: ClassBodyStatement[] = []
@@ -34,7 +34,7 @@ export default class ClassBody extends Statement {
     return new ClassBody(stmts)
   }
 
-  private static parseStmt (parser: Parser): ClassBodyStatement {
+  private static parseStmt (parser: NodeParser): ClassBodyStatement {
     let isStatic = false
     if (parser.lookaheadHasType(TokenType.STATIC)) {
       parser.consume(TokenType.STATIC)
@@ -49,7 +49,7 @@ export default class ClassBody extends Statement {
     return PropertyDefinition.fromParser(parser, isStatic, visibility)
   }
 
-  private static getMemberVisibility (parser: Parser): CLASS_MEMBER_VISIBILITY {
+  private static getMemberVisibility (parser: NodeParser): CLASS_MEMBER_VISIBILITY {
     switch (parser.getLookahead().type) {
       case TokenType.PUBLIC:
         parser.consume(TokenType.PUBLIC)

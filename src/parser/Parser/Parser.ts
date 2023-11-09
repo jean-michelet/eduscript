@@ -27,6 +27,18 @@ import LiteralExpression from '../Nodes/Expression/LiteralExpression.js'
 import Identifier from '../Nodes/Expression/Identifier.js'
 
 export default class Parser {
+  private readonly nodeParser: NodeParser
+
+  constructor (scanner: ScannerInterface) {
+    this.nodeParser = new NodeParser(scanner)
+  }
+
+  public parse (input: string): Program {
+    return this.nodeParser.parse(input)
+  }
+}
+
+export class NodeParser {
   private readonly _scanner: ScannerInterface
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
@@ -118,7 +130,6 @@ export default class Parser {
     }
 
     let number: number | null = null
-
     if (this.lookaheadHasType(TokenType.NUMBER)) {
       number = this.consume(TokenType.NUMBER).value as number
     }

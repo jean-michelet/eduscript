@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from './Expression.js'
@@ -14,7 +14,7 @@ export default class ArrayAccessExpression extends Expression {
     this.index = index
   }
 
-  static fromParser (parser: Parser, id: Identifier | ArrayAccessExpression): ArrayAccessExpression {
+  static fromParser (parser: NodeParser, id: Identifier | ArrayAccessExpression): ArrayAccessExpression {
     parser.consume(TokenType.LEFT_BRACKET)
 
     const index = parser.consume(TokenType.NUMBER).value as number

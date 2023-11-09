@@ -1,5 +1,5 @@
 import { Context } from '../../../Parser/ContextStack.js'
-import Parser from '../../../Parser/Parser.js'
+import { NodeParser } from '../../../Parser/Parser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Expression from '../../Expression/Expression.js'
@@ -13,7 +13,7 @@ export default class ReturnStatement extends Statement {
     this.expression = expression
   }
 
-  static fromParser (parser: Parser): ReturnStatement {
+  static fromParser (parser: NodeParser): ReturnStatement {
     if (!parser.contextStack.in(Context.FUNCTION)) {
       throw new SyntaxError('"return" outside a function.')
     }

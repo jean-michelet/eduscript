@@ -1,4 +1,4 @@
-import Parser from '../../../Parser/Parser.js'
+import { NodeParser } from '../../../Parser/Parser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Expression from '../../Expression/Expression.js'
@@ -26,7 +26,7 @@ export default class PropertyDefinition extends Statement {
     this.visibility = visibility
   }
 
-  static fromParser (parser: Parser, isStatic: boolean, visibility: CLASS_MEMBER_VISIBILITY): PropertyDefinition {
+  static fromParser (parser: NodeParser, isStatic: boolean, visibility: CLASS_MEMBER_VISIBILITY): PropertyDefinition {
     const id = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
     let init: Expression | null = null
 

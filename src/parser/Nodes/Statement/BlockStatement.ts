@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import EmptyStatement from './EmptyStatement.js'
@@ -12,7 +12,7 @@ export default class BlockStatement extends Statement {
     this.statements = statements
   }
 
-  static fromParser (parser: Parser): BlockStatement {
+  static fromParser (parser: NodeParser): BlockStatement {
     parser.consume(TokenType.LEFT_CBRACE)
 
     const stmts = parser.lookaheadHasType(TokenType.RIGHT_CBRACE)

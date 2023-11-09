@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
@@ -22,7 +22,7 @@ export default class VariableDeclaration extends Statement {
     this.init = init
   }
 
-  static fromParser (parser: Parser): VariableDeclaration {
+  static fromParser (parser: NodeParser): VariableDeclaration {
     const kind = parser.consume().lexeme as VariableKind
     const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
     const typeAnnotation = TypeAnnotation.fromParser(parser)

@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Statement from './Statement.js'
@@ -11,7 +11,7 @@ export default class ImportStatement extends Statement {
     this.path = path
   }
 
-  static fromParser (parser: Parser): ImportStatement {
+  static fromParser (parser: NodeParser): ImportStatement {
     parser.consume(TokenType.IMPORT)
 
     const path = parser.consume(TokenType.STRING).value as string

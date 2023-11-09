@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
@@ -17,7 +17,7 @@ export default class IfStatement extends Statement {
     this.alternate = alternate
   }
 
-  static fromParser (parser: Parser, ifOrElseIf: TokenType.IF | TokenType.ELSE_IF = TokenType.IF): IfStatement {
+  static fromParser (parser: NodeParser, ifOrElseIf: TokenType.IF | TokenType.ELSE_IF = TokenType.IF): IfStatement {
     parser.consume(ifOrElseIf)
 
     const test = parser.expression()

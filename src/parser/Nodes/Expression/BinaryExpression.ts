@@ -1,4 +1,4 @@
-import Parser from '../../Parser/Parser.js'
+import { NodeParser } from '../../Parser/Parser.js'
 import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression, { PrimaryExpression } from './Expression.js'
@@ -18,7 +18,7 @@ export default class BinaryExpression extends Expression {
     this.right = right
   }
 
-  static parse (parser: Parser, leftExpr: PrimaryExpression, precedence: number): PrimaryExpression {
+  static parse (parser: NodeParser, leftExpr: PrimaryExpression, precedence: number): PrimaryExpression {
     const currentPrecedence = BinaryExpression.precedence(parser.getLookahead().type)
     while (BinaryExpression.isOperator(parser.getLookahead().type)) {
       if (currentPrecedence < precedence) break
@@ -33,7 +33,7 @@ export default class BinaryExpression extends Expression {
     return leftExpr
   }
 
-  static fromParser (parser: Parser, leftExpr: PrimaryExpression): PrimaryExpression {
+  static fromParser (parser: NodeParser, leftExpr: PrimaryExpression): PrimaryExpression {
     return this.parse(parser, leftExpr, 0)
   }
 
