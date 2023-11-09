@@ -130,15 +130,11 @@ export default class Scanner implements ScannerInterface {
           this._advance()
           return this._createToken(TokenType.LOGICAL_AND)
         }
-        // Handle syntax error or other tokens
-        throw new Error('Unexpected character: &')
       case '|':
         if (this._peek() === '|') {
           this._advance()
           return this._createToken(TokenType.LOGICAL_OR)
         }
-        // Handle syntax error or other tokens
-        throw new Error('Unexpected character: |')
       // assignment operators
       case '=':
         if (this._peek() === '=') {
