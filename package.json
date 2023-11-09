@@ -8,7 +8,8 @@
     "watch": "npm run clean && tsc --watch",
     "build": "npm run clean && tsc",
     "clean": "rm -rf dist",
-    "standard": "ts-standard --fix"
+    "standard": "ts-standard --fix",
+    "standard-check": "ts-standard"
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",
