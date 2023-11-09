@@ -28,7 +28,7 @@ export default class Scanner implements ScannerInterface {
 
   scan (): Token[] {
     const tokens: Token[] = []
-    let currentToken: Token | null = this.scanToken()
+    let currentToken: Token = this.scanToken()
     while (currentToken != null) {
       tokens.push(currentToken)
       currentToken = this.scanToken()
