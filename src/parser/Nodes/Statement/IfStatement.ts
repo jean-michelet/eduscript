@@ -1,17 +1,19 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeAttributes } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
+import AbstractStatement from './AbstractStatement.js'
 import BlockStatement from './BlockStatement.js'
-import Statement from './Statement.js'
 
-export default class IfStatement extends Statement {
+export default class IfStatement extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.IF_STATEMENT
   public readonly test: Expression
   public readonly consequent: BlockStatement
   public readonly alternate: BlockStatement | IfStatement | null
 
-  constructor (test: Expression, consequent: BlockStatement, alternate: BlockStatement | IfStatement | null = null) {
-    super(AST_NODE_TYPE.IF_STATEMENT)
+  constructor (attributes: NodeAttributes, test: Expression, consequent: BlockStatement, alternate: BlockStatement | IfStatement | null = null) {
+    super(attributes)
     this.test = test
     this.consequent = consequent
     this.alternate = alternate
@@ -33,6 +35,6 @@ export default class IfStatement extends Statement {
       alternate = BlockStatement.fromParser(parser)
     }
 
-    return new IfStatement(test, consequent, alternate)
+    return new IfStatement(parser.endParsing(), test, consequent, alternate)
   }
 }

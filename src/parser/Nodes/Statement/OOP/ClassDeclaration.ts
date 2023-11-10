@@ -1,17 +1,19 @@
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
+import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Identifier from '../../Expression/Identifier.js'
-import Statement from '../Statement.js'
+import AbstractStatement from '../AbstractStatement.js'
 import ClassBody from './ClassBody.js'
 
-export default class ClassDeclaration extends Statement {
+export default class ClassDeclaration extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.CLASS_DECLARATION
   public readonly parent: Identifier | null
   public readonly identifier: Identifier
   public readonly body: ClassBody
 
-  constructor (identifier: Identifier, body: ClassBody, parent: Identifier | null = null) {
-    super(AST_NODE_TYPE.CLASS_DECLARATION)
+  constructor (attributes: NodeAttributes, identifier: Identifier, body: ClassBody, parent: Identifier | null = null) {
+    super(attributes)
     this.identifier = identifier
     this.parent = parent
     this.body = body
@@ -27,6 +29,6 @@ export default class ClassDeclaration extends Statement {
       parent = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
     }
 
-    return new ClassDeclaration(identifier, ClassBody.fromParser(parser), parent)
+    return new ClassDeclaration(parser.endParsing(), identifier, ClassBody.fromParser(parser), parent)
   }
 }

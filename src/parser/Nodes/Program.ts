@@ -2,8 +2,8 @@ import { Context } from '../Parser/ContextStack.js'
 import AbstractNodeParser from '../Parser/AbstractNodeParser.js'
 import { AST_NODE_TYPE } from './AstNode.js'
 import BlockStatement from './Statement/BlockStatement.js'
-import Statement from './Statement/Statement.js'
 import AbstractNode, { NodeAttributes } from './AbstractNode.js'
+import AbstractStatement from './Statement/AbstractStatement.js'
 
 export default class Program extends AbstractNode {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.PROGRAM
@@ -18,7 +18,7 @@ export default class Program extends AbstractNode {
     parser.contextStack.enter(Context.TOP)
 
     parser.startParsing()
-    let statements: Statement[] = []
+    let statements: AbstractStatement[] = []
     if (!parser.eof()) {
       statements = parser.statements()
     }

@@ -40,7 +40,7 @@ export default function (): void {
       expect(stmts).toHaveLength(1)
 
       expect(stmt.test).toBeInstanceOf(BinaryExpression)
-      expect(stmt.consequent.statements).toHaveLength(1) // EmptyStatement
+      expect(stmt.consequent.statements).toHaveLength(0)
       expect((stmt.alternate as BlockStatement).statements).toHaveLength(2)
     })
   })

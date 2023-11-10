@@ -10,6 +10,7 @@ import LeftHandSideExpression from '../Nodes/Expression/LeftHandSideExpression.j
 import LiteralExpression from '../Nodes/Expression/LiteralExpression.js'
 import MemberExpression from '../Nodes/Expression/MemberExpression.js'
 import Program from '../Nodes/Program.js'
+import AbstractStatement from '../Nodes/Statement/AbstractStatement.js'
 import BlockStatement from '../Nodes/Statement/BlockStatement.js'
 import EmptyStatement from '../Nodes/Statement/EmptyStatement.js'
 import ExpressionStatement from '../Nodes/Statement/ExpressionStatement.js'
@@ -20,7 +21,6 @@ import BreakStatement from '../Nodes/Statement/JumpStatement/BreakStatement.js'
 import ContinueStatement from '../Nodes/Statement/JumpStatement/ContinueStatement.js'
 import ReturnStatement from '../Nodes/Statement/JumpStatement/ReturnStatement.js'
 import ClassDeclaration from '../Nodes/Statement/OOP/ClassDeclaration.js'
-import Statement from '../Nodes/Statement/Statement.js'
 import VariableDeclaration from '../Nodes/Statement/VariableDeclaration.js'
 import WhileStatement from '../Nodes/Statement/WhileStatement.js'
 import { ScannerInterface } from '../Scanner/Scanner.js'
@@ -55,9 +55,9 @@ export default abstract class AbstractNodeParser {
     return Program.fromParser(this)
   }
 
-  public statements (): Statement[] {
+  public statements (): AbstractStatement[] {
     this.startParsing()
-    const stmts: Statement[] = [this.statement()]
+    const stmts: AbstractStatement[] = [this.statement()]
     while (
       !this.eof() &&
         this.lookahead.type !== TokenType.RIGHT_CBRACE
@@ -68,7 +68,7 @@ export default abstract class AbstractNodeParser {
     return stmts
   }
 
-  public statement (): Statement {
+  public statement (): AbstractStatement {
     this.startParsing()
     switch (this.getLookahead().type) {
       case TokenType.LEFT_CBRACE: {
@@ -131,7 +131,7 @@ export default abstract class AbstractNodeParser {
       number = this.consume(TokenType.NUMBER).value as number
     }
 
-    const stmt = type === TokenType.BREAK ? new BreakStatement(number) : new ContinueStatement(number)
+    const stmt = type === TokenType.BREAK ? new BreakStatement(this.endParsing(), number) : new ContinueStatement(this.endParsing(), number)
 
     this.consume(TokenType.SEMI_COLON)
 

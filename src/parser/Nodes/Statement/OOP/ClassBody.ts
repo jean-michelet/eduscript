@@ -1,7 +1,8 @@
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
+import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
-import Statement from '../Statement.js'
+import AbstractStatement from '../AbstractStatement.js'
 import MethodDefinition from './MethodDefinition.js'
 import PropertyDefinition from './PropertyDefinition.js'
 
@@ -13,11 +14,12 @@ export enum CLASS_MEMBER_VISIBILITY {
   PRIVATE
 }
 
-export default class ClassBody extends Statement {
+export default class ClassBody extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.CLASS_BODY
   public readonly statements: ClassBodyStatement[]
 
-  constructor (statements: ClassBodyStatement[]) {
-    super(AST_NODE_TYPE.CLASS_BODY)
+  constructor (attributes: NodeAttributes, statements: ClassBodyStatement[]) {
+    super(attributes)
     this.statements = statements
   }
 
@@ -31,7 +33,7 @@ export default class ClassBody extends Statement {
 
     parser.consume(TokenType.RIGHT_CBRACE)
 
-    return new ClassBody(stmts)
+    return new ClassBody(parser.endParsing(), stmts)
   }
 
   private static parseStmt (parser: AbstractNodeParser): ClassBodyStatement {

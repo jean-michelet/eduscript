@@ -17,7 +17,7 @@ export default function (): void {
       expect(myFunction.identifier.name).toBe('myFunction')
       expect(myFunction.params).toHaveLength(0)
       expect(myFunction.body).toBeInstanceOf(BlockStatement)
-      expect(myFunction.body.statements).toHaveLength(1) // EmptyStatement
+      expect(myFunction.body.statements).toHaveLength(0)
     })
 
     test('should parse a function declaration with parameters', () => {

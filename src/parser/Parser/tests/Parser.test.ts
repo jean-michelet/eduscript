@@ -19,7 +19,7 @@ import EmptyStatement from '../../Nodes/Statement/EmptyStatement.js'
 import ExpressionStatement from '../../Nodes/Statement/ExpressionStatement.js'
 import Identifier from '../../Nodes/Expression/Identifier.js'
 import Expression from '../../Nodes/Expression/Expression.js'
-import Statement from '../../Nodes/Statement/Statement.js'
+import AbstractStatement from '../../Nodes/Statement/AbstractStatement.js'
 
 const parser = new Parser(new Scanner())
 
@@ -87,7 +87,7 @@ describe('Parser Tests', () => {
   testParseArrayAccessExpression()
 })
 
-export function parseStatements (src: string): Statement[] {
+export function parseStatements (src: string): AbstractStatement[] {
   const ast = parser.parse(src)
   return ast.body.statements
 }

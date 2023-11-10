@@ -1,11 +1,13 @@
+import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
-import Statement from '../Statement.js'
+import AbstractStatement from '../AbstractStatement.js'
 
-export default class BreakStatement extends Statement {
+export default class BreakStatement extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.BREAK_STATEMENT
   public readonly level: number
 
-  constructor (level: number | null) {
-    super(AST_NODE_TYPE.BREAK_STATEMENT)
+  constructor (attributes: NodeAttributes, level: number | null = null) {
+    super(attributes)
     this.level = level ?? 1
   }
 }

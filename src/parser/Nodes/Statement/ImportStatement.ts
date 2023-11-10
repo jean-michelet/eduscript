@@ -1,13 +1,15 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeAttributes } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
-import Statement from './Statement.js'
+import AbstractStatement from './AbstractStatement.js'
 
-export default class ImportStatement extends Statement {
+export default class ImportStatement extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.IMPORT_STATEMENT
   public readonly path: string
 
-  constructor (path: string) {
-    super(AST_NODE_TYPE.IMPORT_STATEMENT)
+  constructor (attributes: NodeAttributes, path: string) {
+    super(attributes)
     this.path = path
   }
 
@@ -18,6 +20,6 @@ export default class ImportStatement extends Statement {
 
     parser.consume(TokenType.SEMI_COLON)
 
-    return new ImportStatement(path)
+    return new ImportStatement(parser.endParsing(), path)
   }
 }

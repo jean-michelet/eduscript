@@ -2,10 +2,10 @@ import BinaryExpression from '../parser/Nodes/Expression/BinaryExpression.js'
 import Expression from '../parser/Nodes/Expression/Expression.js'
 import LiteralExpression from '../parser/Nodes/Expression/LiteralExpression.js'
 import Program from '../parser/Nodes/Program.js'
-import ExpressionStatement from '../parser/Nodes/Statement/ExpressionStatement.js'
-import Statement from '../parser/Nodes/Statement/Statement.js'
 import AbstractCheckedProgram from './AbstractCheckedProgram.js'
 import Type from './Type.js'
+import AbstractStatement from '../parser/Nodes/Statement/AbstractStatement.js'
+import ExpressionStatement from '../parser/Nodes/Statement/ExpressionStatement.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -26,13 +26,13 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     })
   }
 
-  private _checkStmtList (stmts: Statement[]): void {
+  private _checkStmtList (stmts: AbstractStatement[]): void {
     for (const stmt of stmts) {
       this._checkStmt(stmt)
     }
   }
 
-  private _checkStmt (stmt: Statement): void {
+  private _checkStmt (stmt: AbstractStatement): void {
     if (stmt instanceof ExpressionStatement) {
       this._checkExpr(stmt.expression)
     }

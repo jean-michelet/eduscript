@@ -4,14 +4,16 @@ import { TokenType } from '../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
 import BlockStatement from './BlockStatement.js'
-import Statement from './Statement.js'
+import AbstractStatement from './AbstractStatement.js'
+import { NodeAttributes } from '../AbstractNode.js'
 
-export default class WhileStatement extends Statement {
+export default class WhileStatement extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.WHILE_STATEMENT
   public readonly test: Expression
   public readonly consequent: BlockStatement
 
-  constructor (test: Expression, consequent: BlockStatement) {
-    super(AST_NODE_TYPE.WHILE_STATEMENT)
+  constructor (attributes: NodeAttributes, test: Expression, consequent: BlockStatement) {
+    super(attributes)
     this.test = test
     this.consequent = consequent
   }
@@ -25,6 +27,6 @@ export default class WhileStatement extends Statement {
     const consequent = BlockStatement.fromParser(parser)
     parser.contextStack.leave(Context.LOOP)
 
-    return new WhileStatement(test, consequent)
+    return new WhileStatement(parser.endParsing(), test, consequent)
   }
 }

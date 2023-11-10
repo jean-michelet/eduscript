@@ -5,15 +5,17 @@ import { AST_NODE_TYPE } from '../AstNode.js'
 import AssignmentPattern from '../Expression/AssignmentPattern.js'
 import Identifier from '../Expression/Identifier.js'
 import BlockStatement from './BlockStatement.js'
-import Statement from './Statement.js'
+import AbstractStatement from './AbstractStatement.js'
+import { NodeAttributes } from '../AbstractNode.js'
 
-export default class FunctionDeclaration extends Statement {
+export default class FunctionDeclaration extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.FUNCTION_DECLARATION
   public readonly identifier: Identifier
   public readonly params: Array<Identifier | AssignmentPattern>
   public readonly body: BlockStatement
 
-  constructor (identifier: Identifier, params: Array<Identifier | AssignmentPattern>, body: BlockStatement) {
-    super(AST_NODE_TYPE.FUNCTION_DECLARATION)
+  constructor (attributes: NodeAttributes, identifier: Identifier, params: Array<Identifier | AssignmentPattern>, body: BlockStatement) {
+    super(attributes)
     this.identifier = identifier
     this.params = params
     this.body = body
@@ -45,6 +47,6 @@ export default class FunctionDeclaration extends Statement {
     const body = BlockStatement.fromParser(parser)
     parser.contextStack.leave(Context.FUNCTION)
 
-    return new FunctionDeclaration(identifier, params, body)
+    return new FunctionDeclaration(parser.endParsing(), identifier, params, body)
   }
 }
