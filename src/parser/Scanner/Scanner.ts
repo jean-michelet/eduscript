@@ -1,3 +1,4 @@
+import SourceFileManager from './SourceFileManager.js'
 import { Token, TokenType, TokenValue } from './Token.js'
 
 export interface ScannerInterface {
@@ -9,15 +10,19 @@ export interface ScannerInterface {
 export default class Scanner implements ScannerInterface {
   private _src = ''
   private _startTokenPos = 0
-  private _currentTokenPos = 0
-  private _line = 1
+  private _endTokenPos = 0
+  private _startLine = 1
+  private _endLine = 0
   private readonly _whitespaceChars = [' ', '\r', '\t', '\n']
+  private _sourceFile: SourceFileManager = new SourceFileManager('')
 
   init (src: string = ''): void {
     this._src = src
     this._startTokenPos = 0
-    this._currentTokenPos = 0
-    this._line = 1
+    this._endTokenPos = 0
+    this._startLine = 1
+    this._endLine = 1
+    this._sourceFile = new SourceFileManager(src)
   }
 
   scan (): Token[] {
@@ -36,11 +41,12 @@ export default class Scanner implements ScannerInterface {
       return this._createToken(TokenType.EOF)
     }
 
-    this._startTokenPos = this._currentTokenPos
+    this._startLine = this._endLine
+    this._startTokenPos = this._endTokenPos
 
     const char: string = this._advance()
     if (this._isWhitespaceChar(char)) {
-      if (char === '\n') this._line++
+      if (char === '\n') this._endLine++
 
       return this.scanToken()
     }
@@ -67,7 +73,11 @@ export default class Scanner implements ScannerInterface {
       return this._identifier()
     }
 
-    throw new SyntaxError(`Unexpected char '${char}' at line ${this._line}.`)
+    const token = this._createToken(TokenType.INVALID)
+
+    const lineInfo = this._sourceFile.getHighlightedLineInfo(this._endLine, token)
+
+    throw new SyntaxError(`Unexpected char '${char}' at line ${this._endLine}:${lineInfo.startPos}.${lineInfo.highlighted}`)
   }
 
   private _tryScanningSymbol (char: string): Token | null {
@@ -293,7 +303,7 @@ export default class Scanner implements ScannerInterface {
       }
 
       if (this._advance() === '\n') {
-        this._line++
+        this._endLine++
       }
     }
 
@@ -316,7 +326,7 @@ export default class Scanner implements ScannerInterface {
       this._advance()
     }
 
-    const string = this._src.substring(this._startTokenPos + 1, this._currentTokenPos)
+    const string = this._src.substring(this._startTokenPos + 1, this._endTokenPos)
 
     this._advance()
 
@@ -329,14 +339,14 @@ export default class Scanner implements ScannerInterface {
     }
 
     const value = Number(
-      this._src.substring(this._startTokenPos, this._currentTokenPos)
+      this._src.substring(this._startTokenPos, this._endTokenPos)
     )
 
     return this._createToken(TokenType.NUMBER, value)
   }
 
   private _boolean (): Token {
-    const value = this._src.substring(this._startTokenPos, this._currentTokenPos) === 'true'
+    const value = this._src.substring(this._startTokenPos, this._endTokenPos) === 'true'
 
     return this._createToken(TokenType.BOOLEAN, value)
   }
@@ -356,7 +366,7 @@ export default class Scanner implements ScannerInterface {
     }
 
     // Advance only when sure it's a match
-    this._currentTokenPos += chars.length
+    this._endTokenPos += chars.length
 
     return true
   }
@@ -366,19 +376,19 @@ export default class Scanner implements ScannerInterface {
       return ''
     }
 
-    return this._src.charAt(this._currentTokenPos)
+    return this._src.charAt(this._endTokenPos)
   }
 
   private _peekAt (pos = 1): string {
-    if (this._currentTokenPos + pos >= this._src.length) {
+    if (this._endTokenPos + pos >= this._src.length) {
       return ''
     }
 
-    return this._src.charAt(this._currentTokenPos + pos)
+    return this._src.charAt(this._endTokenPos + pos)
   }
 
   private _advance (): string {
-    return this._src.charAt(this._currentTokenPos++)
+    return this._src.charAt(this._endTokenPos++)
   }
 
   // identifier can only start by a letter or `_`
@@ -403,15 +413,23 @@ export default class Scanner implements ScannerInterface {
   }
 
   private _atEnd (): boolean {
-    return this._currentTokenPos >= this._src.length
+    return this._endTokenPos >= this._src.length
   }
 
   private _createToken (type: TokenType, value: TokenValue = null): Token {
     const lexeme = this._src.substring(
       this._startTokenPos,
-      this._currentTokenPos
+      this._endTokenPos
     )
 
-    return { type, lexeme: lexeme.trim(), value, line: this._line }
+    return {
+      type,
+      lexeme: lexeme.trim(),
+      value,
+      startLine: this._startLine,
+      endLine: this._endLine,
+      startPos: this._startTokenPos,
+      endPos: this._endTokenPos
+    }
   }
 }

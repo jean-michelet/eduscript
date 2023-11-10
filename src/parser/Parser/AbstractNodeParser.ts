@@ -37,7 +37,10 @@ export default abstract class AbstractNodeParser {
       type: TokenType.EOF,
       lexeme: '',
       value: null,
-      line: 0
+      startLine: 0,
+      endLine: 0,
+      startPos: 0,
+      endPos: 0
     }
   }
 
@@ -165,7 +168,7 @@ export default abstract class AbstractNodeParser {
 
       default:
         throw new SyntaxError(
-            `Unexpected token '${this.getLookahead().lexeme}' at line ${this.getLookahead().line
+            `Unexpected token '${this.getLookahead().lexeme}' at line ${this.getLookahead().startLine
             }.`
         )
     }
@@ -201,7 +204,7 @@ export default abstract class AbstractNodeParser {
     if (expectedType && !this.lookaheadHasType(expectedType)) {
       throw new SyntaxError(
           `Expected token '${expectedType}', but found '${this.getLookahead()?.lexeme
-          }' at line ${this.getLookahead()?.line}.`
+          }' at line ${this.getLookahead()?.startLine}.`
       )
     }
 

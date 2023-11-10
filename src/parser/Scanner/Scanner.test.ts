@@ -10,6 +10,8 @@ describe('Scanner Tests', () => {
       const token = scanner.scanToken()
       expect(token.type).toBe(tokenType)
       expect(token.lexeme).toBe(lexeme)
+      expect(token.startPos).toBe(0)
+      expect(token.endPos).toBe(token.lexeme.length)
     })
   }
 
@@ -81,7 +83,8 @@ describe('Scanner Tests', () => {
     expect(token.type).toBe(TokenType.NUMBER)
     expect(token.lexeme).toBe('14')
     expect(token.value).toBe(14)
-    expect(token.line).toBe(6)
+    expect(token.startLine).toBe(6)
+    expect(token.endLine).toBe(6)
   })
 
   test(`should scan a token of type ${TokenType.STRING}`, () => {
@@ -127,16 +130,19 @@ describe('Scanner Tests', () => {
     12`)
     let token = scanner.scanToken()
     expect(token.lexeme).toBe('12')
-    expect(token.line).toBe(3)
+    expect(token.startLine).toBe(3)
+    expect(token.endLine).toBe(3)
 
     scanner.init('\n\n 12')
     token = scanner.scanToken()
     expect(token.lexeme).toBe('12')
-    expect(token.line).toBe(3)
+    expect(token.startLine).toBe(3)
   })
 
   test('should throw an error on invalid token', () => {
-    scanner.init('@')
-    expect(() => scanner.scanToken()).toThrow("Unexpected char '@' at line 1.")
+    scanner.init('let x = @;')
+    expect(() => scanner.scan()).toThrow(`Unexpected char '@' at line 1:0.
+      > let x = @;
+    `)
   })
 })

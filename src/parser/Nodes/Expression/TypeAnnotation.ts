@@ -23,7 +23,7 @@ export class TypeAnnotation extends AstNode {
       case TokenType.IDENTIFIER:
         return new TypeAnnotation(new Identifier(token.lexeme as BuiltinType))
       default:
-        throw new SyntaxError(`Expected type or identifier, but found '${token.lexeme}' at line ${token.line}.`)
+        throw new SyntaxError(`Expected type or identifier, but found '${token.lexeme}' at line ${token.startLine}.`)
     }
   }
 }

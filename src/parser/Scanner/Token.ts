@@ -4,7 +4,10 @@ export interface Token {
   type: TokenType
   lexeme: string
   value: TokenValue
-  line: number
+  startLine: number
+  endLine: number
+  startPos: number
+  endPos: number
 }
 
 export enum TokenType {
@@ -71,5 +74,8 @@ export enum TokenType {
 
   // Identifier
   IDENTIFIER = 'IDENTIFIER',
-  EOF = 'EOF'
+
+  // Others
+  EOF = 'EOF',
+  INVALID = 'INVALID'
 }
