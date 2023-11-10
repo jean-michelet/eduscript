@@ -1,3 +1,4 @@
+import { NodeAttributes } from '../Nodes/AbstractNode.js'
 import ArrayAccessExpression from '../Nodes/Expression/ArrayAccessExpression.js'
 import ArrayExpression from '../Nodes/Expression/ArrayExpression.js'
 import AssignmentExpression, { AssignmentOperator } from '../Nodes/Expression/AssignmentExpression.js'
@@ -27,9 +28,10 @@ import { Token, TokenType } from '../Scanner/Token.js'
 import ContextStack, { Context } from './ContextStack.js'
 
 export default abstract class AbstractNodeParser {
-  private readonly _scanner: ScannerInterface
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
+  private readonly _scanner: ScannerInterface
+  private readonly _tokenStack: Token[] = []
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
@@ -48,10 +50,13 @@ export default abstract class AbstractNodeParser {
     this._scanner.init(input)
     this.lookahead = this._scanner.scanToken()
 
+    this.startParsing()
+
     return Program.fromParser(this)
   }
 
   public statements (): Statement[] {
+    this.startParsing()
     const stmts: Statement[] = [this.statement()]
     while (
       !this.eof() &&
@@ -64,6 +69,7 @@ export default abstract class AbstractNodeParser {
   }
 
   public statement (): Statement {
+    this.startParsing()
     switch (this.getLookahead().type) {
       case TokenType.LEFT_CBRACE: {
         return BlockStatement.fromParser(this)
@@ -111,7 +117,7 @@ export default abstract class AbstractNodeParser {
     const expression = this.expression()
     this.consume(TokenType.SEMI_COLON)
 
-    return new ExpressionStatement(expression)
+    return new ExpressionStatement(this.endParsing(), expression)
   }
 
   public breakLoopStatement (): BreakStatement | ContinueStatement {
@@ -213,6 +219,30 @@ export default abstract class AbstractNodeParser {
     this.lookahead = this._scanner.scanToken()
 
     return prevLookahed
+  }
+
+  public startParsing (): void {
+    this._tokenStack.push(this.lookahead)
+  }
+
+  public endParsing (): NodeAttributes {
+    const startToken = this._tokenStack.pop()
+    if (startToken == null) {
+      throw new RangeError(`
+        AbstractNodeParser::endParsing was called without a matching call to AbstractNodeParser::startParsing.
+        This typically indicates that the parsing process was initiated without a proper opening context. 
+        Ensure that 'startParsing' is called before 'endParsing' is invoked.
+      `)
+    }
+
+    return {
+      startLine: startToken.startLine,
+      endLine: this.lookahead.endLine,
+      startTokenPos: startToken.startPos,
+      endTokenPos: this.lookahead.startPos,
+      startFilePos: startToken.startPos,
+      endFilePos: this.lookahead.endPos
+    }
   }
 
   public eof (): boolean {

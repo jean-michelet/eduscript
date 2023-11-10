@@ -89,7 +89,6 @@ describe('Parser Tests', () => {
 
 export function parseStatements (src: string): Statement[] {
   const ast = parser.parse(src)
-
   return ast.body.statements
 }
 

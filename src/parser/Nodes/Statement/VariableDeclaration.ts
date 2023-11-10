@@ -1,21 +1,23 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeAttributes } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
 import Identifier from '../Expression/Identifier.js'
 import { TypeAnnotation } from '../Expression/TypeAnnotation.js'
-import Statement from './Statement.js'
+import AbstractStatement from './AbstractStatement.js'
 
 export type VariableKind = 'let' | 'const'
 
-export default class VariableDeclaration extends Statement {
+export default class VariableDeclaration extends AbstractStatement {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.VARIABLE_DECLARATION
   public readonly kind: VariableKind
   public readonly typeAnnotation: TypeAnnotation
   public readonly identifier: Identifier
   public readonly init: Expression | null
 
-  constructor (kind: VariableKind, typeAnnotation: TypeAnnotation, identifier: Identifier, init: Expression | null) {
-    super(AST_NODE_TYPE.VARIABLE_DECLARATION)
+  constructor (attributes: NodeAttributes, kind: VariableKind, typeAnnotation: TypeAnnotation, identifier: Identifier, init: Expression | null) {
+    super(attributes)
     this.kind = kind
     this.typeAnnotation = typeAnnotation
     this.identifier = identifier
@@ -37,6 +39,6 @@ export default class VariableDeclaration extends Statement {
 
     parser.consume(TokenType.SEMI_COLON)
 
-    return new VariableDeclaration(kind, typeAnnotation, identifier, init)
+    return new VariableDeclaration(parser.endParsing(), kind, typeAnnotation, identifier, init)
   }
 }

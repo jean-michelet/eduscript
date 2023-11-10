@@ -1,6 +1,6 @@
 import { AST_NODE_TYPE } from './AstNode.js'
 
-export interface AbstractNodeAttributes {
+export interface NodeAttributes {
   startLine: number
   endLine: number
   startTokenPos: number
@@ -9,11 +9,11 @@ export interface AbstractNodeAttributes {
   endFilePos: number
 }
 
-export default abstract class AbstracNode {
+export default abstract class AbstractNode {
   public abstract readonly type: AST_NODE_TYPE
-  public readonly attributes: AbstractNodeAttributes
+  protected _attributes: NodeAttributes
 
-  constructor (attributes: AbstractNodeAttributes) {
-    this.attributes = attributes
+  constructor (attributes: NodeAttributes) {
+    this._attributes = attributes
   }
 }
