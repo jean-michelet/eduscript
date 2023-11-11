@@ -76,7 +76,7 @@ export default class Scanner implements ScannerInterface {
     const invalidToken = this._createToken(TokenType.INVALID)
     const lineInfo = this._sourceFile.getHighlightedLineInfo(this._endLine, invalidToken)
 
-    throw new SyntaxError(`Unexpected char '${char}' at line ${this._endLine}:${lineInfo.startPos}.${lineInfo.highlighted}`)
+    throw new SyntaxError(`Unexpected char '${char}' at line ${this._endLine}:${lineInfo.startPos}.${lineInfo.line}`)
   }
 
   private _tryScanningSymbol (char: string): Token | null {

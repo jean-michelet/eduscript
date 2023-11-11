@@ -7,13 +7,6 @@ interface LineInfo {
   endPos: number
 }
 
-interface HighlightedLineInfo {
-  highlighted: string
-  lineNumber: number
-  startPos: number
-  endPos: number
-}
-
 export default class SourceFileManager {
   private readonly _lines: Map<number, LineInfo>
 
@@ -40,17 +33,17 @@ export default class SourceFileManager {
     return this._lines.get(lineNumber) as LineInfo
   }
 
-  getHighlightedLineInfo (lineNumber: number, token: Token): HighlightedLineInfo {
+  getHighlightedLineInfo (lineNumber: number, token: Token): LineInfo {
     const lineInfo = this.getLineInfo(lineNumber)
     const start = token.startPos - lineInfo.startPos
 
     const cursor = ' '.repeat(lineInfo.line.length).substring(0, start) + '^'
 
-    const highlighted = `
+    const line = `
       > ${lineInfo.line}
         ${cursor}
     `
 
-    return { highlighted, lineNumber: lineInfo.lineNumber, startPos: lineInfo.startPos, endPos: lineInfo.endPos }
+    return { line, lineNumber: lineInfo.lineNumber, startPos: lineInfo.startPos, endPos: lineInfo.endPos }
   }
 }
