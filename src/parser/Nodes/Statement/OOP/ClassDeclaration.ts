@@ -20,6 +20,7 @@ export default class ClassDeclaration extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): ClassDeclaration {
+    parser.startParsing()
     parser.consume(TokenType.CLASS)
     const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
 
@@ -29,6 +30,8 @@ export default class ClassDeclaration extends AbstractStatement {
       parent = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
     }
 
-    return new ClassDeclaration(parser.endParsing(), identifier, ClassBody.fromParser(parser), parent)
+    const body = ClassBody.fromParser(parser)
+
+    return new ClassDeclaration(parser.endParsing(), identifier, body, parent)
   }
 }

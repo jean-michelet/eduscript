@@ -19,6 +19,7 @@ export default class WhileStatement extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): WhileStatement {
+    parser.startParsing()
     parser.consume(TokenType.WHILE)
 
     const test = parser.expression()

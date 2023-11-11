@@ -31,7 +31,7 @@ export default abstract class AbstractNodeParser {
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
   private readonly _scanner: ScannerInterface
-  private readonly _tokenStack: Token[] = []
+  private _tokenStack: Token[] = []
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
@@ -49,14 +49,18 @@ export default abstract class AbstractNodeParser {
   parse (input: string): Program {
     this._scanner.init(input)
     this.lookahead = this._scanner.scanToken()
+    this._tokenStack = []
 
-    this.startParsing()
+    const program = Program.fromParser(this)
 
-    return Program.fromParser(this)
+    if (this._tokenStack.length > 0) {
+      throw new RangeError(`Parsing completed with ${this._tokenStack.length} unmatched tokens in the stack. This usually indicates an imbalance in the usage of 'AbstractNodeParser::startParsing' and 'AbstractNodeParser::endParsing' methods, suggesting that the source code might have unmatched or missing delimiters (like '{' without a corresponding '}'.`)
+    }
+
+    return program
   }
 
   public statements (): AbstractStatement[] {
-    this.startParsing()
     const stmts: AbstractStatement[] = [this.statement()]
     while (
       !this.eof() &&
@@ -69,7 +73,6 @@ export default abstract class AbstractNodeParser {
   }
 
   public statement (): AbstractStatement {
-    this.startParsing()
     switch (this.getLookahead().type) {
       case TokenType.LEFT_CBRACE: {
         return BlockStatement.fromParser(this)
@@ -114,13 +117,11 @@ export default abstract class AbstractNodeParser {
       }
     }
 
-    const expression = this.expression()
-    this.consume(TokenType.SEMI_COLON)
-
-    return new ExpressionStatement(this.endParsing(), expression)
+    return ExpressionStatement.fromParser(this)
   }
 
   public breakLoopStatement (): BreakStatement | ContinueStatement {
+    this.startParsing()
     const type = this.consume(this.getLookahead().type).type
     if (!this.contextStack.hasDirectParent(Context.LOOP)) {
       throw new SyntaxError(`Illegal "${type.toLowerCase()}" statement.`)

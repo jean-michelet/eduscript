@@ -15,6 +15,7 @@ export default class Program extends AbstractNode {
   }
 
   static fromParser (parser: AbstractNodeParser): Program {
+    parser.startParsing()
     parser.contextStack.enter(Context.TOP)
 
     parser.startParsing()

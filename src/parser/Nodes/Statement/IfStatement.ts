@@ -20,6 +20,7 @@ export default class IfStatement extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser, ifOrElseIf: TokenType.IF | TokenType.ELSE_IF = TokenType.IF): IfStatement {
+    parser.startParsing()
     parser.consume(ifOrElseIf)
 
     const test = parser.expression()

@@ -16,6 +16,7 @@ export default class ReturnStatement extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): ReturnStatement {
+    parser.startParsing()
     if (!parser.contextStack.in(Context.FUNCTION)) {
       throw new SyntaxError('"return" outside a function.')
     }

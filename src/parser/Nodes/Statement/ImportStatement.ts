@@ -14,6 +14,7 @@ export default class ImportStatement extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): ImportStatement {
+    parser.startParsing()
     parser.consume(TokenType.IMPORT)
 
     const path = parser.consume(TokenType.STRING).value as string

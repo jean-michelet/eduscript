@@ -1,11 +1,9 @@
-import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import AssignmentPattern from '../../Expression/AssignmentPattern.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
 import BlockStatement from '../BlockStatement.js'
-import FunctionDeclaration from '../FunctionDeclaration.js'
 import { CLASS_MEMBER_VISIBILITY } from './ClassBody.js'
 
 export default class MethodDefinition extends AbstractStatement {
@@ -30,13 +28,5 @@ export default class MethodDefinition extends AbstractStatement {
     this.body = body
     this.isStatic = isStatic
     this.visibility = visibility
-  }
-
-  static fromParser (parser: AbstractNodeParser,
-    isStatic: boolean,
-    visibility: CLASS_MEMBER_VISIBILITY): MethodDefinition {
-    const fn = FunctionDeclaration.fromParser(parser)
-
-    return new MethodDefinition(parser.endParsing(), fn.identifier, fn.params, fn.body, isStatic, visibility)
   }
 }

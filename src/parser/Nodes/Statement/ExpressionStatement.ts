@@ -1,3 +1,5 @@
+import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
+import { TokenType } from '../../Scanner/Token.js'
 import { NodeAttributes } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
@@ -10,5 +12,13 @@ export default class ExpressionStatement extends AbstractStatement {
   constructor (attributes: NodeAttributes, expression: Expression) {
     super(attributes)
     this.expression = expression
+  }
+
+  static fromParser (parser: AbstractNodeParser): ExpressionStatement {
+    parser.startParsing()
+    const expression = parser.expression()
+    parser.consume(TokenType.SEMI_COLON)
+
+    return new ExpressionStatement(parser.endParsing(), expression)
   }
 }

@@ -2,7 +2,10 @@ import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
+import Expression from '../../Expression/Expression.js'
+import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
+import FunctionDeclaration from '../FunctionDeclaration.js'
 import MethodDefinition from './MethodDefinition.js'
 import PropertyDefinition from './PropertyDefinition.js'
 
@@ -24,6 +27,7 @@ export default class ClassBody extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): ClassBody {
+    parser.startParsing()
     parser.consume(TokenType.LEFT_CBRACE)
 
     const stmts: ClassBodyStatement[] = []
@@ -37,6 +41,8 @@ export default class ClassBody extends AbstractStatement {
   }
 
   private static parseStmt (parser: AbstractNodeParser): ClassBodyStatement {
+    parser.startParsing()
+
     let isStatic = false
     if (parser.lookaheadHasType(TokenType.STATIC)) {
       parser.consume(TokenType.STATIC)
@@ -45,10 +51,22 @@ export default class ClassBody extends AbstractStatement {
 
     const visibility = this.getMemberVisibility(parser)
     if (parser.lookaheadHasType(TokenType.FN)) {
-      return MethodDefinition.fromParser(parser, isStatic, visibility)
+      const fn = FunctionDeclaration.fromParser(parser)
+
+      return new MethodDefinition(parser.endParsing(), fn.identifier, fn.params, fn.body, isStatic, visibility)
     }
 
-    return PropertyDefinition.fromParser(parser, isStatic, visibility)
+    const id = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
+    let init: Expression | null = null
+
+    if (parser.lookaheadHasType(TokenType.ASSIGN)) {
+      parser.consume(TokenType.ASSIGN)
+      init = parser.expression()
+    }
+
+    parser.consume(TokenType.SEMI_COLON)
+
+    return new PropertyDefinition(parser.endParsing(), id, init, isStatic, visibility)
   }
 
   private static getMemberVisibility (parser: AbstractNodeParser): CLASS_MEMBER_VISIBILITY {

@@ -1,5 +1,3 @@
-import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
-import { TokenType } from '../../../Scanner/Token.js'
 import { NodeAttributes } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Expression from '../../Expression/Expression.js'
@@ -27,19 +25,5 @@ export default class PropertyDefinition extends AbstractStatement {
     this.init = init
     this.isStatic = isStatic
     this.visibility = visibility
-  }
-
-  static fromParser (parser: AbstractNodeParser, isStatic: boolean, visibility: CLASS_MEMBER_VISIBILITY): PropertyDefinition {
-    const id = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
-    let init: Expression | null = null
-
-    if (parser.lookaheadHasType(TokenType.ASSIGN)) {
-      parser.consume(TokenType.ASSIGN)
-      init = parser.expression()
-    }
-
-    parser.consume(TokenType.SEMI_COLON)
-
-    return new PropertyDefinition(parser.endParsing(), id, init, isStatic, visibility)
   }
 }

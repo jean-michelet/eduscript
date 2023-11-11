@@ -22,6 +22,7 @@ export default class FunctionDeclaration extends AbstractStatement {
   }
 
   static fromParser (parser: AbstractNodeParser): FunctionDeclaration {
+    parser.startParsing()
     parser.consume(TokenType.FN)
     const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
 
