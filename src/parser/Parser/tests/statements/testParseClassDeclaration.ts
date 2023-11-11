@@ -1,22 +1,21 @@
-import { AST_NODE_TYPE } from '../../Nodes/AstNode.js'
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import { CLASS_MEMBER_VISIBILITY, ClassBodyStatement } from '../../Nodes/Statement/OOP/ClassBody.js'
-import ClassDeclaration from '../../Nodes/Statement/OOP/ClassDeclaration.js'
-import MethodDefinition from '../../Nodes/Statement/OOP/MethodDefinition.js'
-import PropertyDefinition from '../../Nodes/Statement/OOP/PropertyDefinition.js'
-import { parseStatements } from './Parser.test.js'
+import { AST_NODE_TYPE } from '../../../Nodes/AstNode.js'
+import Identifier from '../../../Nodes/Expression/Identifier.js'
+import { CLASS_MEMBER_VISIBILITY, ClassBodyStatement } from '../../../Nodes/Statement/OOP/ClassBody.js'
+import ClassDeclaration from '../../../Nodes/Statement/OOP/ClassDeclaration.js'
+import MethodDefinition from '../../../Nodes/Statement/OOP/MethodDefinition.js'
+import PropertyDefinition from '../../../Nodes/Statement/OOP/PropertyDefinition.js'
+import { expectSourceContext, parseStatements } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse ClassDeclaration', () => {
     test('should parse a class declaration', () => {
-      const stmts = parseStatements(`
-         class Foo { 
-
-         }
-      `)
+      const src = 'class Foo {}'
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(ClassDeclaration)
-      expect(stmts).toHaveLength(1)
+      expectSourceContext(stmts[0], {
+        endTokenPos: src.length
+      })
 
       const instance = stmts[0] as ClassDeclaration
 
@@ -26,14 +25,13 @@ export default function (): void {
     })
 
     test('class declaration can extends another class', () => {
-      const stmts = parseStatements(`
-         class Foo extends Bar { 
-  
-         }
-      `)
+      const src = 'class Foo extends Bar {}'
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(ClassDeclaration)
-      expect(stmts).toHaveLength(1)
+      expectSourceContext(stmts[0], {
+        endTokenPos: src.length
+      })
 
       const instance = stmts[0] as ClassDeclaration
 
@@ -42,8 +40,7 @@ export default function (): void {
     })
 
     test('class declaration can have properties', () => {
-      const stmts = parseStatements(`
-        class Foo { 
+      const src = `class Foo { 
           myImplicitPulicProp = 1;
 
           public myExplicitPulicProp = 1;
@@ -54,10 +51,14 @@ export default function (): void {
 
           // static without initialisation is illegal but enforced during semantic analysis
           static public myStaticProp;
-         }
-      `)
+      }`
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(ClassDeclaration)
+      expectSourceContext(stmts[0], {
+        endLine: 12,
+        endTokenPos: src.length
+      })
 
       const properties = (stmts[0] as ClassDeclaration).body.statements as PropertyDefinition[]
       expect(properties).toHaveLength(5)
@@ -70,21 +71,24 @@ export default function (): void {
     })
 
     test('class declaration can have methods', () => {
-      const stmts = parseStatements(`
-        class Foo { 
-          fn myImplicitPulicMethod a {}
+      const src = `class Foo { 
+        fn myImplicitPulicMethod a {}
 
-          public fn myExplicitPulicMethod a {}
+        public fn myExplicitPulicMethod a {}
 
-          protected fn myProtectedMethod a {}
+        protected fn myProtectedMethod a {}
 
-          private fn myPrivateMethod a {}
+        private fn myPrivateMethod a {}
 
-          static public fn myStaticMethod a {}
-         }
-      `)
+        static public fn myStaticMethod a {}
+      }`
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(ClassDeclaration)
+      expectSourceContext(stmts[0], {
+        endLine: 11,
+        endTokenPos: src.length
+      })
 
       const methods = (stmts[0] as ClassDeclaration).body.statements as MethodDefinition[]
       expect(methods).toHaveLength(5)

@@ -1,6 +1,6 @@
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import MemberExpression from '../../Nodes/Expression/MemberExpression.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from './Parser.test.js'
+import Identifier from '../../../Nodes/Expression/Identifier.js'
+import MemberExpression from '../../../Nodes/Expression/MemberExpression.js'
+import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse MemberExpression', () => {

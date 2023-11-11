@@ -1,9 +1,9 @@
-import AssignmentExpression from '../../Nodes/Expression/AssignmentExpression.js'
-import CallExpression from '../../Nodes/Expression/CallExpression.js'
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import LiteralExpression from '../../Nodes/Expression/LiteralExpression.js'
-import MemberExpression from '../../Nodes/Expression/MemberExpression.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from './Parser.test.js'
+import AssignmentExpression from '../../../Nodes/Expression/AssignmentExpression.js'
+import CallExpression from '../../../Nodes/Expression/CallExpression.js'
+import Identifier from '../../../Nodes/Expression/Identifier.js'
+import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
+import MemberExpression from '../../../Nodes/Expression/MemberExpression.js'
+import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse CallExpression', () => {

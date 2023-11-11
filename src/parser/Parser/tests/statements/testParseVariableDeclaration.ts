@@ -1,16 +1,19 @@
-import BinaryExpression from '../../Nodes/Expression/BinaryExpression.js'
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import LiteralExpression from '../../Nodes/Expression/LiteralExpression.js'
-import VariableDeclaration from '../../Nodes/Statement/VariableDeclaration.js'
-import { parseStatements, testThrowErrorIfNotFollowedBySemiColon } from './Parser.test.js'
+import BinaryExpression from '../../../Nodes/Expression/BinaryExpression.js'
+import Identifier from '../../../Nodes/Expression/Identifier.js'
+import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
+import VariableDeclaration from '../../../Nodes/Statement/VariableDeclaration.js'
+import { expectSourceContext, parseStatements, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse VariableDeclaration', () => {
     test('should parse a variable declaration', () => {
-      const stmts = parseStatements('let a: boolean;')
+      const src = 'let a: boolean;'
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(VariableDeclaration)
-      expect(stmts).toHaveLength(1)
+      expectSourceContext(stmts[0], {
+        endTokenPos: src.length
+      })
 
       const expr = stmts[0] as VariableDeclaration
       expect(expr.identifier.name).toBe('a')

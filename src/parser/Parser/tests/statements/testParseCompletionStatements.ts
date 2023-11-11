@@ -1,22 +1,24 @@
-import FunctionDeclaration from '../../Nodes/Statement/FunctionDeclaration.js'
-import ReturnStatement from '../../Nodes/Statement/JumpStatement/ReturnStatement.js'
-import { parseStatements } from './Parser.test.js'
-import WhileStatement from '../../Nodes/Statement/WhileStatement.js'
-import BreakStatement from '../../Nodes/Statement/JumpStatement/BreakStatement.js'
-import ContinueStatement from '../../Nodes/Statement/JumpStatement/ContinueStatement.js'
-import LiteralExpression from '../../Nodes/Expression/LiteralExpression.js'
+import FunctionDeclaration from '../../../Nodes/Statement/FunctionDeclaration.js'
+import ReturnStatement from '../../../Nodes/Statement/JumpStatement/ReturnStatement.js'
+import { expectSourceContext, parseStatements } from '../Parser.test.js'
+import WhileStatement from '../../../Nodes/Statement/WhileStatement.js'
+import BreakStatement from '../../../Nodes/Statement/JumpStatement/BreakStatement.js'
+import ContinueStatement from '../../../Nodes/Statement/JumpStatement/ContinueStatement.js'
+import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
 
 export default function (): void {
   describe('Test parse ReturnStatement', () => {
     test('should parse a function with ReturnStatement', () => {
-      const stmts = parseStatements(`
-        fn myFunction {
-          return 1;
-        }
-      `)
+      const src = `fn myFunction {
+        return 1;
+      }`
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(FunctionDeclaration)
-      expect(stmts).toHaveLength(1)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       const myFunction = stmts[0] as FunctionDeclaration
       const returnStmt = myFunction.body.statements[0]
@@ -25,14 +27,16 @@ export default function (): void {
     })
 
     test('should parse a function with empty ReturnStatement', () => {
-      const stmts = parseStatements(`
-        fn myFunction {
-          return;
-        }
-      `)
+      const src = `fn myFunction {
+        return;
+      }`
+      const stmts = parseStatements(src)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       expect(stmts[0]).toBeInstanceOf(FunctionDeclaration)
-      expect(stmts).toHaveLength(1)
 
       const myFunction = stmts[0] as FunctionDeclaration
       const returnStmt = myFunction.body.statements[0]
@@ -59,14 +63,16 @@ export default function (): void {
 
   describe('Test parse BreakStatement', () => {
     test('should parse a loop with BreakStatement', () => {
-      const stmts = parseStatements(`
-        while true {
-          break;
-        }
-      `)
+      const src = `while true {
+        break;
+      }`
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(WhileStatement)
-      expect(stmts).toHaveLength(1)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       const whileStatement = stmts[0] as WhileStatement
       const breakStmt = whileStatement.consequent.statements[0]
@@ -75,13 +81,16 @@ export default function (): void {
     })
 
     test('should parse a loop with BreakStatement and depth level', () => {
-      const stmts = parseStatements(`
-        while true {
-          break 2;
-        }
-      `)
+      const src = `while true {
+        break 2;
+      }`
+      const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(WhileStatement)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       const whileStatement = stmts[0] as WhileStatement
       const breakStmt = whileStatement.consequent.statements[0] as BreakStatement
@@ -118,11 +127,15 @@ export default function (): void {
 
   describe('Test parse ContinueStatement', () => {
     test('should parse a loop with ContinueStatement', () => {
-      const stmts = parseStatements(`
-        while true {
-          continue;
-        }
-      `)
+      const src = `while true {
+        continue;
+      }`
+
+      const stmts = parseStatements(src)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       expect(stmts[0]).toBeInstanceOf(WhileStatement)
       expect(stmts).toHaveLength(1)
@@ -134,13 +147,15 @@ export default function (): void {
     })
 
     test('should parse a loop with ContinueStatement and depth level', () => {
-      const stmts = parseStatements(`
-        while true {
-          continue 2;
-        }
-      `)
+      const src = `while true {
+        continue 2;
+      }`
 
-      expect(stmts[0]).toBeInstanceOf(WhileStatement)
+      const stmts = parseStatements(src)
+      expectSourceContext(stmts[0], {
+        endLine: 3,
+        endTokenPos: src.length
+      })
 
       const whileStatement = stmts[0] as WhileStatement
       const continueStmt = whileStatement.consequent.statements[0] as BreakStatement

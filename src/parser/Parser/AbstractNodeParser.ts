@@ -29,6 +29,7 @@ import ContextStack, { Context } from '../ContextStack/ContextStack.js'
 import ParsingSequenceError from './errors/ParsingSequenceError.js'
 
 export default abstract class AbstractNodeParser {
+  private _prevLookahead: Token
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
   private readonly _scanner: ScannerInterface
@@ -36,7 +37,7 @@ export default abstract class AbstractNodeParser {
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
-    this.lookahead = {
+    this.lookahead = this._prevLookahead = {
       type: TokenType.EOF,
       lexeme: '',
       value: null,
@@ -49,7 +50,7 @@ export default abstract class AbstractNodeParser {
 
   parse (input: string): Program {
     this._scanner.init(input)
-    this.lookahead = this._scanner.scanToken()
+    this.lookahead = this._prevLookahead = this._scanner.scanToken()
     this._tokenStack = []
 
     const program = Program.fromParser(this)
@@ -216,11 +217,11 @@ export default abstract class AbstractNodeParser {
       )
     }
 
-    const prevLookahed = this.getLookahead()
+    this._prevLookahead = this.getLookahead()
 
     this.lookahead = this._scanner.scanToken()
 
-    return prevLookahed
+    return this._prevLookahead
   }
 
   public startParsing (): void {
@@ -239,11 +240,9 @@ export default abstract class AbstractNodeParser {
 
     return {
       startLine: startToken.startLine,
+      endLine: this._prevLookahead.endLine,
       startTokenPos: startToken.startPos,
-      startFilePos: startToken.startPos,
-      endLine: this.lookahead.endLine,
-      endTokenPos: this.lookahead.startPos,
-      endFilePos: this.lookahead.endPos
+      endTokenPos: this._prevLookahead.endPos
     }
   }
 

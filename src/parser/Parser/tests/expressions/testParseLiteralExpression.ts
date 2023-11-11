@@ -1,5 +1,5 @@
-import LiteralExpression from '../../Nodes/Expression/LiteralExpression.js'
-import { parseExpression } from './Parser.test.js'
+import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
+import { parseExpression } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse LiteralExpression', () => {

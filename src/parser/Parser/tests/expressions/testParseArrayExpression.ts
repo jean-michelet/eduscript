@@ -1,8 +1,8 @@
-import ArrayExpression from '../../Nodes/Expression/ArrayExpression.js'
-import BinaryExpression from '../../Nodes/Expression/BinaryExpression.js'
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import LiteralExpression from '../../Nodes/Expression/LiteralExpression.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from './Parser.test.js'
+import ArrayExpression from '../../../Nodes/Expression/ArrayExpression.js'
+import BinaryExpression from '../../../Nodes/Expression/BinaryExpression.js'
+import Identifier from '../../../Nodes/Expression/Identifier.js'
+import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
+import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse ArrayExpression', () => {
