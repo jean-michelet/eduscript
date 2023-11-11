@@ -1,4 +1,4 @@
-import { Context } from '../../../ContextStack/ContextStack.js'
+import { Context } from '../../../../ContextStack/ContextStack.js'
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
