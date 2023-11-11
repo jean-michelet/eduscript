@@ -1,5 +1,5 @@
-import Parser from '../../parser/Parser/Parser.js'
-import Scanner from '../../parser/Scanner/Scanner.js'
+import Parser from '../../../parser/Parser/Parser.js'
+import Scanner from '../../../parser/Scanner/Scanner.js'
 import SemanticChecker from '../SemanticChecker.js'
 import testCheckBinaryOperations from './testCheckBinaryOperations.js'
 
