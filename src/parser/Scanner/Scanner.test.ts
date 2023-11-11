@@ -141,8 +141,8 @@ describe('Scanner Tests', () => {
 
   test('should throw an error on invalid token', () => {
     scanner.init('let x = @;')
-    expect(() => scanner.scan()).toThrow(`Unexpected char '@' at line 1:0.
+    expect(() => scanner.scan()).toThrow(`Unexpected char '@' at line 1:8.
       > let x = @;
-    `)
+                ^`)
   })
 })

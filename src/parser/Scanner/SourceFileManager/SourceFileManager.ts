@@ -1,4 +1,4 @@
-import { Token } from './Token.js'
+import { Token } from '../Token.js'
 
 interface LineInfo {
   line: string
@@ -25,7 +25,7 @@ export default class SourceFileManager {
     }
   }
 
-  getLineInfo (lineNumber: number): LineInfo {
+  public getLineInfo (lineNumber: number): LineInfo {
     if (!this._lines.has(lineNumber)) {
       throw new Error(`Invalid line number: ${lineNumber}`)
     }
@@ -33,7 +33,7 @@ export default class SourceFileManager {
     return this._lines.get(lineNumber) as LineInfo
   }
 
-  getLineWithHighlightedToken (lineNumber: number, token: Token): LineInfo {
+  public getLineWithHighlightedToken (lineNumber: number, token: Token): LineInfo {
     const lineInfo = this.getLineInfo(lineNumber)
     const start = token.startPos - lineInfo.startPos
 
@@ -41,8 +41,7 @@ export default class SourceFileManager {
 
     const line = `
       > ${lineInfo.line}
-        ${cursor}
-    `
+        ${cursor}`
 
     return { line, lineNumber: lineInfo.lineNumber, startPos: lineInfo.startPos, endPos: lineInfo.endPos }
   }
