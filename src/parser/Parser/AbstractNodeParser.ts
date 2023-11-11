@@ -25,7 +25,7 @@ import VariableDeclaration from '../Nodes/Statement/VariableDeclaration.js'
 import WhileStatement from '../Nodes/Statement/WhileStatement.js'
 import { ScannerInterface } from '../Scanner/Scanner.js'
 import { Token, TokenType } from '../Scanner/Token.js'
-import ContextStack, { Context } from './ContextStack.js'
+import ContextStack, { Context } from '../ContextStack/ContextStack.js'
 import ParsingSequenceError from './errors/ParsingSequenceError.js'
 
 export default abstract class AbstractNodeParser {
@@ -124,7 +124,7 @@ export default abstract class AbstractNodeParser {
   public breakLoopStatement (): BreakStatement | ContinueStatement {
     this.startParsing()
     const type = this.consume(this.getLookahead().type).type
-    if (!this.contextStack.hasDirectParent(Context.LOOP)) {
+    if (!this.contextStack.isCurrentContext(Context.LOOP)) {
       throw new SyntaxError(`Illegal "${type.toLowerCase()}" statement.`)
     }
 

@@ -1,3 +1,5 @@
+import ContextMismatchError from './errors/ContextMismatchError.js'
+
 export enum Context {
   TOP = 'TOP',
   LOOP = 'LOOP',
@@ -5,24 +7,24 @@ export enum Context {
 }
 
 export default class ContextStack {
-  _stack: Context[] = []
+  private readonly _stack: Context[] = []
 
   enter (context: Context): void {
     this._stack.push(context)
   }
 
   leave (context: Context): void {
-    const poped = this._stack.pop()
-    if (poped !== context) {
-      throw new TypeError(`Expected context value "${context.toString()}", but got "${poped ?? 'undefined'}" instead.`)
+    const popped = this._stack.pop()
+    if (popped !== context) {
+      throw new ContextMismatchError(context.toString(), popped)
     }
   }
 
-  in (context: Context): boolean {
+  inContext (context: Context): boolean {
     return this._stack.includes(context)
   }
 
-  hasDirectParent (context: Context): boolean {
+  isCurrentContext (context: Context): boolean {
     return this._stack.slice(-1)[0] === context
   }
 }
