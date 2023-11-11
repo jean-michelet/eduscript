@@ -4,14 +4,14 @@ import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Expression from '../../Expression/Expression.js'
 import AbstractStatement from '../AbstractStatement.js'
-import { NodeAttributes } from '../../AbstractNode.js'
+import { NodeSourceContext } from '../../AbstractNode.js'
 
 export default class ReturnStatement extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.RETURN_STATEMENT
   public readonly expression: Expression | null
 
-  constructor (attributes: NodeAttributes, expression: Expression | null) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, expression: Expression | null) {
+    super(sourceContext)
     this.expression = expression
   }
 

@@ -1,6 +1,6 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
-import { NodeAttributes } from '../AbstractNode.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
 import Identifier from '../Expression/Identifier.js'
@@ -16,8 +16,8 @@ export default class VariableDeclaration extends AbstractStatement {
   public readonly identifier: Identifier
   public readonly init: Expression | null
 
-  constructor (attributes: NodeAttributes, kind: VariableKind, typeAnnotation: TypeAnnotation, identifier: Identifier, init: Expression | null) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, kind: VariableKind, typeAnnotation: TypeAnnotation, identifier: Identifier, init: Expression | null) {
+    super(sourceContext)
     this.kind = kind
     this.typeAnnotation = typeAnnotation
     this.identifier = identifier

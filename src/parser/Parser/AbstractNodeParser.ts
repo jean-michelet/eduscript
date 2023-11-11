@@ -1,4 +1,4 @@
-import { NodeAttributes } from '../Nodes/AbstractNode.js'
+import { NodeSourceContext } from '../Nodes/AbstractNode.js'
 import ArrayAccessExpression from '../Nodes/Expression/ArrayAccessExpression.js'
 import ArrayExpression from '../Nodes/Expression/ArrayExpression.js'
 import AssignmentExpression, { AssignmentOperator } from '../Nodes/Expression/AssignmentExpression.js'
@@ -227,7 +227,7 @@ export default abstract class AbstractNodeParser {
     this._tokenStack.push(this.lookahead)
   }
 
-  public endParsing (): NodeAttributes {
+  public endParsing (): NodeSourceContext {
     const startToken = this._tokenStack.pop()
     if (startToken == null) {
       throw new ParsingSequenceError(`
@@ -239,10 +239,10 @@ export default abstract class AbstractNodeParser {
 
     return {
       startLine: startToken.startLine,
-      endLine: this.lookahead.endLine,
       startTokenPos: startToken.startPos,
-      endTokenPos: this.lookahead.startPos,
       startFilePos: startToken.startPos,
+      endLine: this.lookahead.endLine,
+      endTokenPos: this.lookahead.startPos,
       endFilePos: this.lookahead.endPos
     }
   }

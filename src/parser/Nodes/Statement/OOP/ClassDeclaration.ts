@@ -1,6 +1,6 @@
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
-import { NodeAttributes } from '../../AbstractNode.js'
+import { NodeSourceContext } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
@@ -12,8 +12,8 @@ export default class ClassDeclaration extends AbstractStatement {
   public readonly identifier: Identifier
   public readonly body: ClassBody
 
-  constructor (attributes: NodeAttributes, identifier: Identifier, body: ClassBody, parent: Identifier | null = null) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, identifier: Identifier, body: ClassBody, parent: Identifier | null = null) {
+    super(sourceContext)
     this.identifier = identifier
     this.parent = parent
     this.body = body

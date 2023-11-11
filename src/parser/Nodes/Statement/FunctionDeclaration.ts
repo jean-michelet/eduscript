@@ -6,7 +6,7 @@ import AssignmentPattern from '../Expression/AssignmentPattern.js'
 import Identifier from '../Expression/Identifier.js'
 import BlockStatement from './BlockStatement.js'
 import AbstractStatement from './AbstractStatement.js'
-import { NodeAttributes } from '../AbstractNode.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 
 export default class FunctionDeclaration extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.FUNCTION_DECLARATION
@@ -14,8 +14,8 @@ export default class FunctionDeclaration extends AbstractStatement {
   public readonly params: Array<Identifier | AssignmentPattern>
   public readonly body: BlockStatement
 
-  constructor (attributes: NodeAttributes, identifier: Identifier, params: Array<Identifier | AssignmentPattern>, body: BlockStatement) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, identifier: Identifier, params: Array<Identifier | AssignmentPattern>, body: BlockStatement) {
+    super(sourceContext)
     this.identifier = identifier
     this.params = params
     this.body = body

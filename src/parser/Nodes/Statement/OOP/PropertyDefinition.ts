@@ -1,4 +1,4 @@
-import { NodeAttributes } from '../../AbstractNode.js'
+import { NodeSourceContext } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import Expression from '../../Expression/Expression.js'
 import Identifier from '../../Expression/Identifier.js'
@@ -13,13 +13,13 @@ export default class PropertyDefinition extends AbstractStatement {
   public readonly visibility: CLASS_MEMBER_VISIBILITY
 
   constructor (
-    attributes: NodeAttributes,
+    sourceContext: NodeSourceContext,
     id: Identifier,
     init: Expression | null,
     isStatic: boolean,
     visibility: CLASS_MEMBER_VISIBILITY
   ) {
-    super(attributes)
+    super(sourceContext)
 
     this.identifier = id
     this.init = init

@@ -5,15 +5,15 @@ import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression from '../Expression/Expression.js'
 import BlockStatement from './BlockStatement.js'
 import AbstractStatement from './AbstractStatement.js'
-import { NodeAttributes } from '../AbstractNode.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 
 export default class WhileStatement extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.WHILE_STATEMENT
   public readonly test: Expression
   public readonly consequent: BlockStatement
 
-  constructor (attributes: NodeAttributes, test: Expression, consequent: BlockStatement) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, test: Expression, consequent: BlockStatement) {
+    super(sourceContext)
     this.test = test
     this.consequent = consequent
   }

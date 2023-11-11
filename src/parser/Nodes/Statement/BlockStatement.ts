@@ -1,6 +1,6 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
-import { NodeAttributes } from '../AbstractNode.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import AbstractStatement from './AbstractStatement.js'
 
@@ -8,8 +8,8 @@ export default class BlockStatement extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.BLOCK_STATEMENT
   public readonly statements: AbstractStatement[]
 
-  constructor (attributes: NodeAttributes, statements: AbstractStatement[]) {
-    super(attributes)
+  constructor (sourceContext: NodeSourceContext, statements: AbstractStatement[]) {
+    super(sourceContext)
     this.statements = statements
   }
 

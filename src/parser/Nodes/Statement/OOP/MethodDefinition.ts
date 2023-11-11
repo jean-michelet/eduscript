@@ -1,4 +1,4 @@
-import { NodeAttributes } from '../../AbstractNode.js'
+import { NodeSourceContext } from '../../AbstractNode.js'
 import { AST_NODE_TYPE } from '../../AstNode.js'
 import AssignmentPattern from '../../Expression/AssignmentPattern.js'
 import Identifier from '../../Expression/Identifier.js'
@@ -15,14 +15,14 @@ export default class MethodDefinition extends AbstractStatement {
   public readonly visibility: CLASS_MEMBER_VISIBILITY
 
   constructor (
-    attributes: NodeAttributes,
+    sourceContext: NodeSourceContext,
     identifier: Identifier,
     params: Array<Identifier | AssignmentPattern>,
     body: BlockStatement,
     isStatic: boolean,
     visibility: CLASS_MEMBER_VISIBILITY
   ) {
-    super(attributes)
+    super(sourceContext)
     this.identifier = identifier
     this.params = params
     this.body = body
