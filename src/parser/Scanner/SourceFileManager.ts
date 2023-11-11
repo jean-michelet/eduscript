@@ -33,7 +33,7 @@ export default class SourceFileManager {
     return this._lines.get(lineNumber) as LineInfo
   }
 
-  getHighlightedLineInfo (lineNumber: number, token: Token): LineInfo {
+  getLineWithHighlightedToken (lineNumber: number, token: Token): LineInfo {
     const lineInfo = this.getLineInfo(lineNumber)
     const start = token.startPos - lineInfo.startPos
 
