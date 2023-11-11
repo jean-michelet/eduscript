@@ -26,6 +26,7 @@ import WhileStatement from '../Nodes/Statement/WhileStatement.js'
 import { ScannerInterface } from '../Scanner/Scanner.js'
 import { Token, TokenType } from '../Scanner/Token.js'
 import ContextStack, { Context } from './ContextStack.js'
+import ParsingSequenceError from './errors/ParsingSequenceError.js'
 
 export default abstract class AbstractNodeParser {
   public lookahead: Token
@@ -229,7 +230,7 @@ export default abstract class AbstractNodeParser {
   public endParsing (): NodeAttributes {
     const startToken = this._tokenStack.pop()
     if (startToken == null) {
-      throw new RangeError(`
+      throw new ParsingSequenceError(`
         AbstractNodeParser::endParsing was called without a matching call to AbstractNodeParser::startParsing.
         This typically indicates that the parsing process was initiated without a proper opening context. 
         Ensure that 'startParsing' is called before 'endParsing' is invoked.
@@ -252,7 +253,7 @@ export default abstract class AbstractNodeParser {
 
   public getLookahead (): Token {
     if (this.lookaheadHasType(TokenType.EOF)) {
-      throw new Error('Unexpected end of line.')
+      throw new SyntaxError('Unexpected end of line.')
     }
 
     return this.lookahead
