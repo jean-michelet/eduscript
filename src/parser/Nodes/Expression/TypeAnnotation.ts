@@ -16,14 +16,11 @@ export class TypeAnnotation extends AstNode {
   static fromParser (parser: AbstractNodeParser): TypeAnnotation {
     parser.consume(TokenType.COLON)
 
-    const token = parser.consume()
-    switch (token.type) {
-      case TokenType.BUILTIN_TYPE:
-        return new TypeAnnotation(token.lexeme as BuiltinType)
-      case TokenType.IDENTIFIER:
-        return new TypeAnnotation(new Identifier(token.lexeme as BuiltinType))
-      default:
-        throw new SyntaxError(`Expected type or identifier, but found '${token.lexeme}' at line ${token.startLine}.`)
+    if (parser.lookaheadHasType(TokenType.BUILTIN_TYPE)) {
+      const type = parser.consume(TokenType.BUILTIN_TYPE).lexeme as BuiltinType
+      return new TypeAnnotation(type)
     }
+
+    return new TypeAnnotation(Identifier.fromParser(parser))
   }
 }

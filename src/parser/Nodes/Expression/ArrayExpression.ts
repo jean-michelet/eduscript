@@ -1,17 +1,21 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
+import AbstractExpression from './AbstractExpression.js'
 import Expression from './Expression.js'
 
-export default class ArrayExpression extends Expression {
+export default class ArrayExpression extends AbstractExpression {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.ARRAY_EXPRESSION
   public readonly elements: Expression[]
 
-  constructor (elements: Expression[]) {
-    super(AST_NODE_TYPE.ARRAY_EXPRESSION)
+  constructor (sourceContext: NodeSourceContext, elements: Expression[]) {
+    super(sourceContext)
     this.elements = elements
   }
 
   static fromParser (parser: AbstractNodeParser): ArrayExpression {
+    parser.startParsing()
     parser.consume(TokenType.LEFT_BRACKET)
 
     const args: Expression[] = []
@@ -29,6 +33,6 @@ export default class ArrayExpression extends Expression {
 
     parser.consume(TokenType.RIGHT_BRACKET)
 
-    return new ArrayExpression(args)
+    return new ArrayExpression(parser.endParsing(), args)
   }
 }

@@ -1,6 +1,6 @@
 import ArrayAccessExpression from '../../../Nodes/Expression/ArrayAccessExpression.js'
 import Identifier from '../../../Nodes/Expression/Identifier.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
+import { expectSourceContext, parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse ArrayAccessExpression', () => {
@@ -8,6 +8,9 @@ export default function (): void {
       const expr = parseExpression('x[1];') as ArrayAccessExpression
 
       expect(expr).toBeInstanceOf(ArrayAccessExpression)
+      expectSourceContext(expr, {
+        endTokenPos: 4
+      })
 
       expect(expr.array).toBeInstanceOf(Identifier)
       expect((expr.array as Identifier).name).toBe('x')
@@ -16,6 +19,9 @@ export default function (): void {
 
     test('should parse multi-dimensional ArrayAccessExpression', () => {
       const expr = parseExpression('x[1][2];') as ArrayAccessExpression
+      expectSourceContext(expr, {
+        endTokenPos: 7
+      })
 
       expect(expr).toBeInstanceOf(ArrayAccessExpression)
 

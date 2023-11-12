@@ -1,16 +1,19 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
+import AbstractExpression from './AbstractExpression.js'
 import Expression from './Expression.js'
 import Identifier from './Identifier.js'
 import MemberExpression from './MemberExpression.js'
 
-export default class CallExpression extends Expression {
+export default class CallExpression extends AbstractExpression {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.CALL_EXPRESSION
   public readonly callee: Identifier | MemberExpression
   public readonly args: Expression[]
 
-  constructor (callee: Identifier | MemberExpression, args: Expression[]) {
-    super(AST_NODE_TYPE.CALL_EXPRESSION)
+  constructor (sourceContext: NodeSourceContext, callee: Identifier | MemberExpression, args: Expression[]) {
+    super(sourceContext)
     this.callee = callee
     this.args = args
   }
@@ -33,6 +36,6 @@ export default class CallExpression extends Expression {
 
     parser.consume(TokenType.RIGHT_PAREN)
 
-    return new CallExpression(id, args)
+    return new CallExpression(parser.endParsing(), id, args)
   }
 }

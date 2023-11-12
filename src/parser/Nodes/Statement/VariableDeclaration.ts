@@ -27,7 +27,7 @@ export default class VariableDeclaration extends AbstractStatement {
   static fromParser (parser: AbstractNodeParser): VariableDeclaration {
     parser.startParsing()
     const kind = parser.consume().lexeme as VariableKind
-    const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
+    const identifier = Identifier.fromParser(parser)
     const typeAnnotation = TypeAnnotation.fromParser(parser)
     let init: Expression | null = null
 

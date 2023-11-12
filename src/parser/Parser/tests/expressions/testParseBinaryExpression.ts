@@ -21,7 +21,8 @@ export default function (): void {
 
     basicBinaryExpressions.forEach(([op, left, right]) => {
       test(`should parse the binary expression "${left.toString()} ${op.toString()} ${right.toString()}"`, () => {
-        const expr = parseExpression(`${left.toString()} ${op.toString()} ${right.toString()};`) as BinaryExpression
+        const src = `${left.toString()} ${op.toString()} ${right.toString()};`
+        const expr = parseExpression(src) as BinaryExpression
 
         expect(expr).toBeInstanceOf(BinaryExpression)
         expect(expr.operator).toBe(op)

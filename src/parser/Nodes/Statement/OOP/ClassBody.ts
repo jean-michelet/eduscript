@@ -56,7 +56,7 @@ export default class ClassBody extends AbstractStatement {
       return new MethodDefinition(parser.endParsing(), fn.identifier, fn.params, fn.body, isStatic, visibility)
     }
 
-    const id = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
+    const id = Identifier.fromParser(parser)
 
     let init: Expression | null = null
     if (parser.lookaheadHasType(TokenType.ASSIGN)) {

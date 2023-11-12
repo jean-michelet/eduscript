@@ -33,7 +33,7 @@ export default abstract class AbstractNodeParser {
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
   private readonly _scanner: ScannerInterface
-  private _tokenStack: Token[] = []
+  private _parsingContext: Token[] = []
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
@@ -51,12 +51,12 @@ export default abstract class AbstractNodeParser {
   parse (input: string): Program {
     this._scanner.init(input)
     this.lookahead = this._prevLookahead = this._scanner.scanToken()
-    this._tokenStack = []
+    this._parsingContext = []
 
     const program = Program.fromParser(this)
 
-    if (this._tokenStack.length > 0) {
-      throw new RangeError(`Parsing completed with ${this._tokenStack.length} unmatched tokens in the stack. This usually indicates an imbalance in the usage of 'AbstractNodeParser::startParsing' and 'AbstractNodeParser::endParsing' methods, suggesting that the source code might have unmatched or missing delimiters (like '{' without a corresponding '}'.`)
+    if (this._parsingContext.length > 0) {
+      throw new RangeError(`Parsing completed with ${this._parsingContext.length} unmatched tokens in the stack. This usually indicates an imbalance in the usage of 'AbstractNodeParser::startParsing' and 'AbstractNodeParser::endParsing' methods, suggesting that the source code might have unmatched or missing delimiters (like '{' without a corresponding '}'.`)
     }
 
     return program
@@ -184,15 +184,17 @@ export default abstract class AbstractNodeParser {
   }
 
   public leftHandSideExpression (): LeftHandSideExpression {
-    const name = this.consume(TokenType.IDENTIFIER).lexeme
+    this.startParsing()
+
+    const id = Identifier.fromParser(this)
 
     if (this.lookaheadHasType(TokenType.ASSIGN)) {
       const operator = this.consume(TokenType.ASSIGN).lexeme as AssignmentOperator
 
-      return new AssignmentExpression(operator, new Identifier(name), this.expression())
+      const expr = this.expression()
+      return new AssignmentExpression(this.endParsing(), operator, id, expr)
     }
 
-    const id = new Identifier(name)
     if (this.lookaheadHasType(TokenType.LEFT_BRACKET)) {
       return ArrayAccessExpression.fromParser(this, id)
     }
@@ -205,6 +207,8 @@ export default abstract class AbstractNodeParser {
     if (this.lookaheadHasType(TokenType.LEFT_PAREN)) {
       return CallExpression.fromParser(this, callee)
     }
+
+    this.endParsing()
 
     return callee
   }
@@ -225,11 +229,11 @@ export default abstract class AbstractNodeParser {
   }
 
   public startParsing (): void {
-    this._tokenStack.push(this.lookahead)
+    this._parsingContext.push(this.lookahead)
   }
 
   public endParsing (): NodeSourceContext {
-    const startToken = this._tokenStack.pop()
+    const startToken = this._parsingContext.pop()
     if (startToken == null) {
       throw new ParsingSequenceError(`
         AbstractNodeParser::endParsing was called without a matching call to AbstractNodeParser::startParsing.

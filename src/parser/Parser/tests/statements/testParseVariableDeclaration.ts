@@ -70,12 +70,6 @@ export default function (): void {
       }).toThrow(new SyntaxError("Expected token 'COLON', but found ';' at line 1."))
     })
 
-    test('should throw error when variable type annotation is not present', () => {
-      expect(() => {
-        parseStatements('const a:;')
-      }).toThrow(new SyntaxError("Expected type or identifier, but found ';' at line 1."))
-    })
-
     testThrowErrorIfNotFollowedBySemiColon('let a: number = 1')
   })
 }

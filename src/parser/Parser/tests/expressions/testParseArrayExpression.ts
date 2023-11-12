@@ -2,14 +2,18 @@ import ArrayExpression from '../../../Nodes/Expression/ArrayExpression.js'
 import BinaryExpression from '../../../Nodes/Expression/BinaryExpression.js'
 import Identifier from '../../../Nodes/Expression/Identifier.js'
 import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
+import { expectSourceContext, parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parse ArrayExpression', () => {
     test('should parse an ArrayExpression', () => {
-      const expr = parseExpression('[1, y, 1 + 2];') as ArrayExpression
+      const src = '[1, y, 1 + 2];'
+      const expr = parseExpression(src) as ArrayExpression
 
       expect(expr).toBeInstanceOf(ArrayExpression)
+      expectSourceContext(expr, {
+        endTokenPos: src.length - 1
+      })
 
       const elements = (expr).elements
 

@@ -24,17 +24,19 @@ export default class FunctionDeclaration extends AbstractStatement {
   static fromParser (parser: AbstractNodeParser): FunctionDeclaration {
     parser.startParsing()
     parser.consume(TokenType.FN)
-    const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
+    const identifier = Identifier.fromParser(parser)
 
     const params: Array<Identifier | AssignmentPattern> = []
     while (!parser.lookaheadHasType(TokenType.LEFT_CBRACE)) {
-      const identifier = new Identifier(parser.consume(TokenType.IDENTIFIER).lexeme)
+      parser.startParsing()
+      const identifier = Identifier.fromParser(parser)
 
       if (parser.lookaheadHasType(TokenType.ASSIGN)) {
         parser.consume(TokenType.ASSIGN)
-        params.push(new AssignmentPattern(identifier, parser.expression()))
+        params.push(new AssignmentPattern(parser.endParsing(), identifier, parser.expression()))
       } else {
         params.push(identifier)
+        parser.endParsing()
       }
 
       if (!parser.lookaheadHasType(TokenType.COMA)) {
