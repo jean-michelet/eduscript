@@ -33,6 +33,7 @@ export default abstract class AbstractNodeParser {
   public lookahead: Token
   public readonly contextStack: ContextStack = new ContextStack()
   private readonly _scanner: ScannerInterface
+  private _tokens: Token[] = []
   private _parsingContext: Token[] = []
 
   constructor (scanner: ScannerInterface) {
@@ -50,7 +51,8 @@ export default abstract class AbstractNodeParser {
 
   parse (input: string): Program {
     this._scanner.init(input)
-    this.lookahead = this._prevLookahead = this._scanner.scanToken()
+    this._tokens = this._scanner.scan()
+    this.lookahead = this._prevLookahead = this.getNextToken()
     this._parsingContext = []
 
     const program = Program.fromParser(this)
@@ -213,21 +215,6 @@ export default abstract class AbstractNodeParser {
     return callee
   }
 
-  public consume (expectedType: TokenType | null = null): Token {
-    if (expectedType && !this.lookaheadHasType(expectedType)) {
-      throw new SyntaxError(
-          `Expected token '${expectedType}', but found '${this.getLookahead()?.lexeme
-          }' at line ${this.getLookahead()?.startLine}.`
-      )
-    }
-
-    this._prevLookahead = this.getLookahead()
-
-    this.lookahead = this._scanner.scanToken()
-
-    return this._prevLookahead
-  }
-
   public startParsing (): void {
     this._parsingContext.push(this.lookahead)
   }
@@ -250,12 +237,44 @@ export default abstract class AbstractNodeParser {
     }
   }
 
+  public consume (expectedType: TokenType | null = null): Token {
+    if (expectedType && !this.lookaheadHasType(expectedType)) {
+      throw new SyntaxError(
+          `Expected token '${expectedType}', but found '${this.getLookahead()?.lexeme
+          }' at line ${this.getLookahead()?.startLine}.`
+      )
+    }
+
+    this._prevLookahead = this.getLookahead()
+
+    this.lookahead = this.getNextToken()
+
+    return this._prevLookahead
+  }
+
   public eof (): boolean {
     return this.lookaheadHasType(TokenType.EOF)
   }
 
+  public tokenAt (index: number): Token | null {
+    const token = this._tokens[index]
+    if (typeof token === 'undefined') {
+      return null
+    }
+
+    return token
+  }
+
+  public getNextToken (): Token {
+    if (this._tokens.length > 0) {
+      return this._tokens.shift() as Token
+    }
+
+    throw new SyntaxError('Unexpected end of line when accessing next token.')
+  }
+
   public getLookahead (): Token {
-    if (this.lookaheadHasType(TokenType.EOF)) {
+    if (this.eof()) {
       throw new SyntaxError('Unexpected end of line.')
     }
 

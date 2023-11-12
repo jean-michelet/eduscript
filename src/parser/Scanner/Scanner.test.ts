@@ -1,5 +1,5 @@
 import Scanner from './Scanner.js'
-import { TokenType } from './Token.js'
+import { Token, TokenType } from './Token.js'
 
 describe('Scanner Tests', () => {
   const scanner = new Scanner()
@@ -14,6 +14,17 @@ describe('Scanner Tests', () => {
       expect(token.endPos).toBe(token.lexeme.length)
     })
   }
+
+  test('should scan a list of tokens', () => {
+    scanner.init('let x = 1 ;')
+    const tokens = scanner.scan()
+    expect((tokens.shift() as Token).type).toBe(TokenType.LET)
+    expect((tokens.shift() as Token).type).toBe(TokenType.IDENTIFIER)
+    expect((tokens.shift() as Token).type).toBe(TokenType.ASSIGN)
+    expect((tokens.shift() as Token).type).toBe(TokenType.NUMBER)
+    expect((tokens.shift() as Token).type).toBe(TokenType.SEMI_COLON)
+    expect((tokens.shift() as Token).type).toBe(TokenType.EOF)
+  })
 
   const testFixtures = [
     ['.', TokenType.DOT],

@@ -99,7 +99,7 @@ describe('Parser Tests', () => {
 
   testParseArrayAccessExpression()
 
-  // statements
+  // // statements
   testParseVariableDeclaration()
 
   testParseFunctionDeclaration()
@@ -132,10 +132,8 @@ describe('Parser Tests', () => {
     // const assignExpr = (stmts[0] as VariableDeclaration).init as AssignmentExpression
 
     // expectSourceContext(assignExpr, {
-    //   startLine: 3,
-    //   endLine: 5,
-    //   startTokenPos: 8,
-    //   endTokenPos: src.length - suffix.length - 1
+    //   startTokenPos: 4,
+    //   endTokenPos: 17
     // })
   })
 })
