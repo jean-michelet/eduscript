@@ -144,13 +144,7 @@ export default abstract class AbstractNodeParser {
   }
 
   public expression (): Expression {
-    const expr = this.primaryExpression()
-
-    if (BinaryExpression.isOperator(this.getLookahead().type)) {
-      return BinaryExpression.fromParser(this, expr)
-    }
-
-    return expr
+    return BinaryExpression.fromParser(this)
   }
 
   public primaryExpression (): PrimaryExpression {

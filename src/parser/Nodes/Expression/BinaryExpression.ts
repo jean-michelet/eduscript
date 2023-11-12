@@ -1,5 +1,6 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
 import Expression, { PrimaryExpression } from './Expression.js'
 
@@ -14,6 +15,7 @@ export default class BinaryExpression extends Expression {
   public readonly operator: BinaryOperator
   public readonly left
   public readonly right
+  public sourceContext?: NodeSourceContext
 
   constructor (operator: BinaryOperator, left: Expression, right: Expression) {
     super(AST_NODE_TYPE.BINARY_EXPRESSION)
@@ -22,14 +24,15 @@ export default class BinaryExpression extends Expression {
     this.right = right
   }
 
-  static parse (parser: AbstractNodeParser, leftExpr: PrimaryExpression, precedence: number): PrimaryExpression {
-    const currentPrecedence = BinaryExpression.precedence(parser.getLookahead().type)
+  static fromParser (parser: AbstractNodeParser, precedence = 0): PrimaryExpression | BinaryExpression {
+    let leftExpr = parser.primaryExpression()
+
     while (BinaryExpression.isOperator(parser.getLookahead().type)) {
-      if (currentPrecedence < precedence) break
+      const currentPrecedence = BinaryExpression.precedence(parser.getLookahead().type)
+      if (currentPrecedence <= precedence) break
 
       const operator = parser.consume().lexeme as BinaryOperator
-
-      const rightExpr = this.parse(parser, parser.primaryExpression(), currentPrecedence) as BinaryExpression
+      const rightExpr = BinaryExpression.fromParser(parser, currentPrecedence) as BinaryExpression
 
       leftExpr = new BinaryExpression(operator, leftExpr, rightExpr)
     }
@@ -37,32 +40,28 @@ export default class BinaryExpression extends Expression {
     return leftExpr
   }
 
-  static fromParser (parser: AbstractNodeParser, leftExpr: PrimaryExpression): PrimaryExpression {
-    return this.parse(parser, leftExpr, 0)
-  }
-
   static precedence (tokenType: TokenType): number {
     switch (tokenType) {
       case TokenType.MULTIPLICATIVE:
-        return 5
+        return 7
       case TokenType.ADDITIVE:
-        return 4
+        return 6
       case TokenType.GREATER_THAN:
       case TokenType.LESS_THAN:
       case TokenType.GREATER_EQUAL:
       case TokenType.LESS_EQUAL:
-        return 3
+        return 5
       case TokenType.EQUAL:
       case TokenType.NOT_EQUAL:
-        return 2
+        return 4
       case TokenType.NOT:
-        return 6
+        return 3
       case TokenType.LOGICAL_AND:
-        return 1
+        return 2
       case TokenType.LOGICAL_OR:
-        return 0
+        return 1
       default:
-        return -1
+        return 0
     }
   }
 

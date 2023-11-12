@@ -26,17 +26,25 @@ export default function (): void {
 
         expect(expr).toBeInstanceOf(BinaryExpression)
         expect(expr.operator).toBe(op)
+        // expectSourceContext(expr, {
+        //   endTokenPos: src.length - 1,
+        // })
 
         expect((expr.left as LiteralExpression).literal).toBe(left)
         expect((expr.right as LiteralExpression).literal).toBe(right)
       })
     })
 
-    test('should parse binary expressions from left to right if no precedence', () => {
-      const expr = parseExpression('1 * 2 * 3;') as BinaryExpression
+    test('should parse binary expressions to left if same precedence', () => {
+      const src = '1 * 2 * 3;'
+      const expr = parseExpression(src) as BinaryExpression
+      // expectSourceContext(expr, {
+      //   endTokenPos: src.length - 1,
+      // })
 
-      expect(expr.left).toBeInstanceOf(LiteralExpression)
-      expect(expr.right).toBeInstanceOf(BinaryExpression)
+      expect(expr.left).toBeInstanceOf(BinaryExpression)
+
+      expect(expr.right).toBeInstanceOf(LiteralExpression)
     })
 
     test('should parse binary expressions with parenthesized expressions precedence over Multiplicative', () => {
