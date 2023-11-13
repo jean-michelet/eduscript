@@ -3,17 +3,16 @@ import { TokenType } from '../../Scanner/Token.js'
 import { NodeSourceContext, AST_NODE_TYPE } from '../AbstractNode.js'
 import AbstractExpression from './AbstractExpression.js'
 import Identifier from './Identifier.js'
-import LeftHandSideExpression from './LeftHandSideExpression.js'
 
 export type AssignmentOperator = '=' | '+=' | '-=' | '*=' | '/='
 
 export default class AssignmentExpression extends AbstractExpression {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.ASSIGNMENT_EXPRESSION
   public readonly operator: AssignmentOperator
-  public readonly left: LeftHandSideExpression
+  public readonly left: Identifier
   public readonly right: AbstractExpression
 
-  constructor (sourceContext: NodeSourceContext, operator: AssignmentOperator, left: LeftHandSideExpression, right: AbstractExpression) {
+  constructor (sourceContext: NodeSourceContext, operator: AssignmentOperator, left: Identifier, right: AbstractExpression) {
     super(sourceContext)
     this.operator = operator
     this.left = left

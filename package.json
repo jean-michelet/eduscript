@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "jest --testPathPattern=src/",
+    "test": "jest src",
     "watch": "npm run clean && tsc --watch",
     "build": "npm run clean && tsc",
     "clean": "rm -rf dist",

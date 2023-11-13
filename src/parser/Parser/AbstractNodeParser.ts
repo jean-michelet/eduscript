@@ -5,7 +5,6 @@ import AssignmentExpression from '../Nodes/Expression/AssignmentExpression.js'
 import BinaryExpression from '../Nodes/Expression/BinaryExpression.js'
 import CallExpression from '../Nodes/Expression/CallExpression.js'
 import Identifier from '../Nodes/Expression/Identifier.js'
-import LeftHandSideExpression from '../Nodes/Expression/LeftHandSideExpression.js'
 import LiteralExpression from '../Nodes/Expression/LiteralExpression.js'
 import MemberExpression from '../Nodes/Expression/MemberExpression.js'
 import Program from '../Nodes/Program.js'
@@ -26,7 +25,8 @@ import { ScannerInterface } from '../Scanner/Scanner.js'
 import { Token, TokenType } from '../Scanner/Token.js'
 import ContextStack, { Context } from '../../ContextStack/ContextStack.js'
 import ParsingSequenceError from './errors/ParsingSequenceError.js'
-import AbstractExpression, { PrimaryExpression } from '../Nodes/Expression/AbstractExpression.js'
+import AbstractExpression, { LeftHandSideExpression, PrimaryExpression } from '../Nodes/Expression/AbstractExpression.js'
+import ParenthesizedExpression from '../Nodes/Expression/ParenthesizedExpression.js'
 
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
@@ -165,10 +165,7 @@ export default abstract class AbstractNodeParser {
       }
 
       case TokenType.LEFT_PAREN: {
-        this.consume(TokenType.LEFT_PAREN)
-        const expr = this.expression()
-        this.consume(TokenType.RIGHT_PAREN)
-        return expr
+        return ParenthesizedExpression.fromParser(this)
       }
 
       default:

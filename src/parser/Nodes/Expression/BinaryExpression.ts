@@ -18,18 +18,19 @@ export default class BinaryExpression extends AbstractExpression {
 
   constructor (operator: BinaryOperator, left: AbstractExpression, right: AbstractExpression) {
     super({
-      startLine: 1,
-      startTokenPos: 1,
-      endLine: 1,
-      endTokenPos: 0
+      startLine: left.sourceContext.startLine,
+      endLine: right.sourceContext.endLine,
+      startTokenPos: left.sourceContext.startTokenPos,
+      endTokenPos: right.sourceContext.endTokenPos
     })
+
     this.operator = operator
     this.left = left
     this.right = right
   }
 
   static fromParser (parser: AbstractNodeParser, precedence = 0): PrimaryExpression | BinaryExpression {
-    let leftExpr = parser.primaryExpression()
+    let leftExpr: PrimaryExpression | BinaryExpression = parser.primaryExpression()
 
     while (BinaryExpression.isOperator(parser.getLookahead().type)) {
       const currentPrecedence = BinaryExpression.precedence(parser.getLookahead().type)

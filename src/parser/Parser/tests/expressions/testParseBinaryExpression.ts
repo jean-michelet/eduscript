@@ -1,6 +1,7 @@
 import BinaryExpression from '../../../Nodes/Expression/BinaryExpression.js'
 import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
-import { parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
+import ParenthesizedExpression from '../../../Nodes/Expression/ParenthesizedExpression.js'
+import { expectSourceContext, parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
 export default function (): void {
   describe('Test parser BinaryExpression', () => {
@@ -26,9 +27,9 @@ export default function (): void {
 
         expect(expr).toBeInstanceOf(BinaryExpression)
         expect(expr.operator).toBe(op)
-        // expectSourceContext(expr, {
-        //   endTokenPos: src.length - 1,
-        // })
+        expectSourceContext(expr, {
+          endTokenPos: src.length - 1
+        })
 
         expect((expr.left as LiteralExpression).literal).toBe(left)
         expect((expr.right as LiteralExpression).literal).toBe(right)
@@ -38,9 +39,9 @@ export default function (): void {
     test('should parse binary expressions to left if same precedence', () => {
       const src = '1 * 2 * 3;'
       const expr = parseExpression(src) as BinaryExpression
-      // expectSourceContext(expr, {
-      //   endTokenPos: src.length - 1,
-      // })
+      expectSourceContext(expr, {
+        endTokenPos: src.length - 1
+      })
 
       expect(expr.left).toBeInstanceOf(BinaryExpression)
 
@@ -48,12 +49,24 @@ export default function (): void {
     })
 
     test('should parse binary expressions with parenthesized expressions precedence over Multiplicative', () => {
-      const expr = parseExpression('(1 + 2) * 3;') as BinaryExpression
+      const src = '(1 + 2) * 3;'
+      const expr = parseExpression(src) as BinaryExpression
+      expectSourceContext(expr, {
+        endTokenPos: src.length - 1
+      })
 
-      const left = expr.left as BinaryExpression
+      const parenthesized = expr.left as ParenthesizedExpression
+      expectSourceContext(parenthesized, {
+        endTokenPos: 7
+      })
+
+      const left = parenthesized.expression as BinaryExpression
+      expectSourceContext(left, {
+        startTokenPos: 1,
+        endTokenPos: 6
+      })
       expect((left.left as LiteralExpression).literal).toBe(1)
       expect((left.right as LiteralExpression).literal).toBe(2)
-
       expect((expr.right as LiteralExpression).literal).toBe(3)
     })
 
