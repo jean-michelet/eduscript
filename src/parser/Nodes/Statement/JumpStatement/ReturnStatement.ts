@@ -1,16 +1,15 @@
 import { Context } from '../../../../ContextStack/ContextStack.js'
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
-import { AST_NODE_TYPE } from '../../AstNode.js'
-import Expression from '../../Expression/Expression.js'
+import { AST_NODE_TYPE, NodeSourceContext } from '../../AbstractNode.js'
 import AbstractStatement from '../AbstractStatement.js'
-import { NodeSourceContext } from '../../AbstractNode.js'
+import AbstractExpression from '../../Expression/AbstractExpression.js'
 
 export default class ReturnStatement extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.RETURN_STATEMENT
-  public readonly expression: Expression | null
+  public readonly expression: AbstractExpression | null
 
-  constructor (sourceContext: NodeSourceContext, expression: Expression | null) {
+  constructor (sourceContext: NodeSourceContext, expression: AbstractExpression | null) {
     super(sourceContext)
     this.expression = expression
   }
@@ -23,7 +22,7 @@ export default class ReturnStatement extends AbstractStatement {
 
     parser.consume(TokenType.RETURN)
 
-    let expr: Expression | null = null
+    let expr: AbstractExpression | null = null
     if (!parser.lookaheadHasType(TokenType.SEMI_COLON)) {
       expr = parser.expression()
     }

@@ -1,8 +1,7 @@
 import { Context } from '../../ContextStack/ContextStack.js'
 import AbstractNodeParser from '../Parser/AbstractNodeParser.js'
-import { AST_NODE_TYPE } from './AstNode.js'
+import AbstractNode, { AST_NODE_TYPE, NodeSourceContext } from './AbstractNode.js'
 import BlockStatement from './Statement/BlockStatement.js'
-import AbstractNode, { NodeSourceContext } from './AbstractNode.js'
 import AbstractStatement from './Statement/AbstractStatement.js'
 
 export default class Program extends AbstractNode {

@@ -1,8 +1,7 @@
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
-import { NodeSourceContext } from '../../AbstractNode.js'
-import { AST_NODE_TYPE } from '../../AstNode.js'
-import Expression from '../../Expression/Expression.js'
+import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
+import AbstractExpression from '../../Expression/AbstractExpression.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
 import FunctionDeclaration from '../FunctionDeclaration.js'
@@ -58,7 +57,7 @@ export default class ClassBody extends AbstractStatement {
 
     const id = Identifier.fromParser(parser)
 
-    let init: Expression | null = null
+    let init: AbstractExpression | null = null
     if (parser.lookaheadHasType(TokenType.ASSIGN)) {
       parser.consume(TokenType.ASSIGN)
       init = parser.expression()

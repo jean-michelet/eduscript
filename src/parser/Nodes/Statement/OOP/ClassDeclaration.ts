@@ -1,7 +1,6 @@
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
-import { NodeSourceContext } from '../../AbstractNode.js'
-import { AST_NODE_TYPE } from '../../AstNode.js'
+import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
 import ClassBody from './ClassBody.js'

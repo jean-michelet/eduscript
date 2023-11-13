@@ -14,14 +14,14 @@ import testParseVariableDeclaration from './statements/testParseVariableDeclarat
 import BlockStatement from '../../Nodes/Statement/BlockStatement.js'
 import EmptyStatement from '../../Nodes/Statement/EmptyStatement.js'
 import ExpressionStatement from '../../Nodes/Statement/ExpressionStatement.js'
-import Identifier from '../../Nodes/Expression/Identifier.js'
-import Expression from '../../Nodes/Expression/Expression.js'
 import AbstractStatement from '../../Nodes/Statement/AbstractStatement.js'
 import testParseMemberExpression from './expressions/testParseMemberExpression.js'
 import testParseArrayExpression from './expressions/testParseArrayExpression.js'
 import testParseArrayAccessExpression from './expressions/testParseArrayAccessExpression.js'
 import AbstractNode from '../../Nodes/AbstractNode.js'
 import VariableDeclaration from '../../Nodes/Statement/VariableDeclaration.js'
+import AbstractExpression from '../../Nodes/Expression/AbstractExpression.js'
+import Identifier from '../../Nodes/Expression/Identifier.js'
 
 const parser = new Parser(new Scanner())
 
@@ -143,7 +143,7 @@ export function parseStatements (src: string): AbstractStatement[] {
   return ast.body.statements
 }
 
-export function parseExpression (src: string): Expression {
+export function parseExpression (src: string): AbstractExpression {
   const stmts = parseStatements(src)
 
   expect(stmts).toHaveLength(1)

@@ -1,18 +1,17 @@
 import { Context } from '../../../ContextStack/ContextStack.js'
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
-import { AST_NODE_TYPE } from '../AstNode.js'
-import Expression from '../Expression/Expression.js'
+import { AST_NODE_TYPE, NodeSourceContext } from '../AbstractNode.js'
 import BlockStatement from './BlockStatement.js'
 import AbstractStatement from './AbstractStatement.js'
-import { NodeSourceContext } from '../AbstractNode.js'
+import AbstractExpression from '../Expression/AbstractExpression.js'
 
 export default class WhileStatement extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.WHILE_STATEMENT
-  public readonly test: Expression
+  public readonly test: AbstractExpression
   public readonly consequent: BlockStatement
 
-  constructor (sourceContext: NodeSourceContext, test: Expression, consequent: BlockStatement) {
+  constructor (sourceContext: NodeSourceContext, test: AbstractExpression, consequent: BlockStatement) {
     super(sourceContext)
     this.test = test
     this.consequent = consequent

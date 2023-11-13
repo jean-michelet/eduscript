@@ -1,3 +1,3 @@
-import AstNode from '../AstNode.js'
+import AbstractNode from '../AbstractNode.js'
 
-export default interface LeftHandSideExpression extends AstNode {}
+export default interface LeftHandSideExpression extends AbstractNode {}

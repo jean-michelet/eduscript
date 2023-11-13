@@ -1,9 +1,7 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
-import { NodeSourceContext } from '../AbstractNode.js'
-import { AST_NODE_TYPE } from '../AstNode.js'
+import { NodeSourceContext, AST_NODE_TYPE } from '../AbstractNode.js'
 import AbstractExpression from './AbstractExpression.js'
-import Expression from './Expression.js'
 import Identifier from './Identifier.js'
 import LeftHandSideExpression from './LeftHandSideExpression.js'
 
@@ -13,9 +11,9 @@ export default class AssignmentExpression extends AbstractExpression {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.ASSIGNMENT_EXPRESSION
   public readonly operator: AssignmentOperator
   public readonly left: LeftHandSideExpression
-  public readonly right: Expression
+  public readonly right: AbstractExpression
 
-  constructor (sourceContext: NodeSourceContext, operator: AssignmentOperator, left: LeftHandSideExpression, right: Expression) {
+  constructor (sourceContext: NodeSourceContext, operator: AssignmentOperator, left: LeftHandSideExpression, right: AbstractExpression) {
     super(sourceContext)
     this.operator = operator
     this.left = left

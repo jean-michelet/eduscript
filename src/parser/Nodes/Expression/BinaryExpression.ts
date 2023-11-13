@@ -1,8 +1,7 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
-import { NodeSourceContext } from '../AbstractNode.js'
-import { AST_NODE_TYPE } from '../AstNode.js'
-import Expression, { PrimaryExpression } from './Expression.js'
+import { AST_NODE_TYPE } from '../AbstractNode.js'
+import AbstractExpression, { PrimaryExpression } from './AbstractExpression.js'
 
 export type MathOperator = '+' | '-' | '/' | '*'
 export type RelationalOperator = '>' | '<' | '>=' | '<='
@@ -11,14 +10,19 @@ export type LogicalOperator = '&&' | '||'
 
 export type BinaryOperator = MathOperator | RelationalOperator | EqualityOperator | LogicalOperator
 
-export default class BinaryExpression extends Expression {
+export default class BinaryExpression extends AbstractExpression {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.BINARY_EXPRESSION
   public readonly operator: BinaryOperator
   public readonly left
   public readonly right
-  public sourceContext?: NodeSourceContext
 
-  constructor (operator: BinaryOperator, left: Expression, right: Expression) {
-    super(AST_NODE_TYPE.BINARY_EXPRESSION)
+  constructor (operator: BinaryOperator, left: AbstractExpression, right: AbstractExpression) {
+    super({
+      startLine: 1,
+      startTokenPos: 1,
+      endLine: 1,
+      endTokenPos: 0
+    })
     this.operator = operator
     this.left = left
     this.right = right

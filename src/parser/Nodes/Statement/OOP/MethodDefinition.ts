@@ -1,5 +1,4 @@
-import { NodeSourceContext } from '../../AbstractNode.js'
-import { AST_NODE_TYPE } from '../../AstNode.js'
+import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import AssignmentPattern from '../../Expression/AssignmentPattern.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'

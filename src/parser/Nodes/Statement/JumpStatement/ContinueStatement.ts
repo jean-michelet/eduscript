@@ -1,5 +1,4 @@
-import { NodeSourceContext } from '../../AbstractNode.js'
-import { AST_NODE_TYPE } from '../../AstNode.js'
+import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import AbstractStatement from '../AbstractStatement.js'
 
 export default class ContinueStatement extends AbstractStatement {

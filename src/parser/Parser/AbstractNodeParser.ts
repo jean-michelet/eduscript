@@ -4,7 +4,6 @@ import ArrayExpression from '../Nodes/Expression/ArrayExpression.js'
 import AssignmentExpression from '../Nodes/Expression/AssignmentExpression.js'
 import BinaryExpression from '../Nodes/Expression/BinaryExpression.js'
 import CallExpression from '../Nodes/Expression/CallExpression.js'
-import Expression, { PrimaryExpression } from '../Nodes/Expression/Expression.js'
 import Identifier from '../Nodes/Expression/Identifier.js'
 import LeftHandSideExpression from '../Nodes/Expression/LeftHandSideExpression.js'
 import LiteralExpression from '../Nodes/Expression/LiteralExpression.js'
@@ -27,6 +26,7 @@ import { ScannerInterface } from '../Scanner/Scanner.js'
 import { Token, TokenType } from '../Scanner/Token.js'
 import ContextStack, { Context } from '../../ContextStack/ContextStack.js'
 import ParsingSequenceError from './errors/ParsingSequenceError.js'
+import AbstractExpression, { PrimaryExpression } from '../Nodes/Expression/AbstractExpression.js'
 
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
@@ -143,7 +143,7 @@ export default abstract class AbstractNodeParser {
     return stmt
   }
 
-  public expression (): Expression {
+  public expression (): AbstractExpression {
     return BinaryExpression.fromParser(this)
   }
 

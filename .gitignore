@@ -63,4 +63,4 @@ node_modules/
 .pnp.*
 
 # folder to tests features
-/work
+/src/work

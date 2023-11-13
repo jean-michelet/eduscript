@@ -1,4 +1,4 @@
-import { AST_NODE_TYPE } from '../../../Nodes/AstNode.js'
+import { AST_NODE_TYPE } from '../../../Nodes/AbstractNode.js'
 import Identifier from '../../../Nodes/Expression/Identifier.js'
 import { CLASS_MEMBER_VISIBILITY, ClassBodyStatement } from '../../../Nodes/Statement/OOP/ClassBody.js'
 import ClassDeclaration from '../../../Nodes/Statement/OOP/ClassDeclaration.js'
