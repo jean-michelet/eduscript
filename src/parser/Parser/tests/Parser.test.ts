@@ -22,6 +22,7 @@ import AbstractNode from '../../Nodes/AbstractNode.js'
 import VariableDeclaration from '../../Nodes/Statement/VariableDeclaration.js'
 import AbstractExpression from '../../Nodes/Expression/AbstractExpression.js'
 import Identifier from '../../Nodes/Expression/Identifier.js'
+import testParseNewExpression from './expressions/testParseNewExpression.js'
 
 const parser = new Parser(new Scanner())
 
@@ -98,6 +99,8 @@ describe('Parser Tests', () => {
   testParseArrayExpression()
 
   testParseArrayAccessExpression()
+
+  testParseNewExpression()
 
   // // statements
   testParseVariableDeclaration()

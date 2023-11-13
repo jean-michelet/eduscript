@@ -27,6 +27,7 @@ import ContextStack, { Context } from '../../ContextStack/ContextStack.js'
 import ParsingSequenceError from './errors/ParsingSequenceError.js'
 import AbstractExpression, { LeftHandSideExpression, PrimaryExpression } from '../Nodes/Expression/AbstractExpression.js'
 import ParenthesizedExpression from '../Nodes/Expression/ParenthesizedExpression.js'
+import NewExpression from '../Nodes/Expression/NewExpression.js'
 
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
@@ -168,6 +169,10 @@ export default abstract class AbstractNodeParser {
         return ParenthesizedExpression.fromParser(this)
       }
 
+      case TokenType.NEW: {
+        return NewExpression.fromParser(this)
+      }
+
       default:
         throw new SyntaxError(
             `Unexpected token '${this.getLookahead().lexeme}' at line ${this.getLookahead().startLine
@@ -211,6 +216,23 @@ export default abstract class AbstractNodeParser {
     this.endParsing()
 
     return id
+  }
+
+  public parseArgs (parser: AbstractNodeParser): AbstractExpression[] {
+    const args: AbstractExpression[] = []
+
+    // argument list shouldn't start or end with a coma: ','
+    while (!parser.eof() && !parser.lookaheadHasType(TokenType.COMA) && !parser.lookaheadHasType(TokenType.RIGHT_PAREN)) {
+      args.push(parser.expression())
+
+      if (!parser.lookaheadHasType(TokenType.COMA)) {
+        break
+      }
+
+      parser.consume(TokenType.COMA)
+    }
+
+    return args
   }
 
   public startParsing (): void {
