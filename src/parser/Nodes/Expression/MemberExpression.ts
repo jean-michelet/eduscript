@@ -16,16 +16,22 @@ export default class MemberExpression extends AbstractExpression {
     this.object = object
   }
 
-  static fromParser (parser: AbstractNodeParser, id: Identifier): MemberExpression {
-    parser.startParsing()
+  static parse (parser: AbstractNodeParser, id: Identifier, hasStarted = false): Identifier | MemberExpression {
+    if (!hasStarted) {
+      parser.startParsing()
+    }
 
     parser.consume(TokenType.DOT)
 
     let object: Identifier | MemberExpression = Identifier.fromParser(parser)
     if (parser.lookaheadHasType(TokenType.DOT)) {
-      object = this.fromParser(parser, object)
+      object = this.parse(parser, object)
     }
 
     return new MemberExpression(parser.endParsing(), id, object)
+  }
+
+  static fromParser (parser: AbstractNodeParser, id: Identifier): MemberExpression {
+    return this.parse(parser, id, true) as MemberExpression
   }
 }

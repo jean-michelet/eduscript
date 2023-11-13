@@ -16,8 +16,7 @@ export default class ArrayAccessExpression extends AbstractExpression {
     this.index = index
   }
 
-  static fromParser (parser: AbstractNodeParser, id: Identifier | ArrayAccessExpression): ArrayAccessExpression {
-    // parsing is started in AbstractNodeParser::leftHandSideExpression
+  static parse (parser: AbstractNodeParser, id: Identifier | ArrayAccessExpression): ArrayAccessExpression {
     parser.consume(TokenType.LEFT_BRACKET)
 
     const index = parser.consume(TokenType.NUMBER).value as number
@@ -26,9 +25,16 @@ export default class ArrayAccessExpression extends AbstractExpression {
 
     if (parser.lookaheadHasType(TokenType.LEFT_BRACKET)) {
       parser.startParsing()
-      id = this.fromParser(parser, id)
+      id = this.parse(parser, id)
     }
 
     return new ArrayAccessExpression(parser.endParsing(), id, index)
+  }
+
+  static fromParser (parser: AbstractNodeParser): ArrayAccessExpression {
+    parser.startParsing()
+    const id = Identifier.fromParser(parser)
+
+    return this.parse(parser, id)
   }
 }

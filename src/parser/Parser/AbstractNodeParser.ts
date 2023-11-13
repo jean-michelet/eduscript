@@ -1,7 +1,7 @@
 import { NodeSourceContext } from '../Nodes/AbstractNode.js'
 import ArrayAccessExpression from '../Nodes/Expression/ArrayAccessExpression.js'
 import ArrayExpression from '../Nodes/Expression/ArrayExpression.js'
-import AssignmentExpression, { AssignmentOperator } from '../Nodes/Expression/AssignmentExpression.js'
+import AssignmentExpression from '../Nodes/Expression/AssignmentExpression.js'
 import BinaryExpression from '../Nodes/Expression/BinaryExpression.js'
 import CallExpression from '../Nodes/Expression/CallExpression.js'
 import Expression, { PrimaryExpression } from '../Nodes/Expression/Expression.js'
@@ -31,10 +31,10 @@ import ParsingSequenceError from './errors/ParsingSequenceError.js'
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
   public lookahead: Token
-  public readonly contextStack: ContextStack = new ContextStack()
-  private readonly _scanner: ScannerInterface
   private _tokens: Token[] = []
   private _parsingContext: Token[] = []
+  public readonly contextStack: ContextStack = new ContextStack()
+  private readonly _scanner: ScannerInterface
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
@@ -180,33 +180,40 @@ export default abstract class AbstractNodeParser {
   }
 
   public leftHandSideExpression (): LeftHandSideExpression {
+    const tokenAfterId = this.tokenAt(0)
+    if (tokenAfterId == null) {
+      return Identifier.fromParser(this)
+    }
+
+    if (tokenAfterId.type === TokenType.ASSIGN) {
+      return AssignmentExpression.fromParser(this)
+    }
+
+    if (tokenAfterId.type === TokenType.LEFT_BRACKET) {
+      return ArrayAccessExpression.fromParser(this)
+    }
+
+    // for CallExpression
     this.startParsing()
 
-    const id = Identifier.fromParser(this)
-
-    if (this.lookaheadHasType(TokenType.ASSIGN)) {
-      const operator = this.consume(TokenType.ASSIGN).lexeme as AssignmentOperator
-
-      const expr = this.expression()
-      return new AssignmentExpression(this.endParsing(), operator, id, expr)
-    }
-
-    if (this.lookaheadHasType(TokenType.LEFT_BRACKET)) {
-      return ArrayAccessExpression.fromParser(this, id)
-    }
-
-    let callee: Identifier | MemberExpression = id
+    // for MemberExpression
+    this.startParsing()
+    let id: Identifier | MemberExpression = Identifier.fromParser(this)
     if (this.lookaheadHasType(TokenType.DOT)) {
-      callee = MemberExpression.fromParser(this, callee)
+      id = MemberExpression.fromParser(this, id)
+    } else {
+      // Cancel if MemberExpression has not beed parsed
+      this.endParsing()
     }
 
     if (this.lookaheadHasType(TokenType.LEFT_PAREN)) {
-      return CallExpression.fromParser(this, callee)
+      return CallExpression.fromParser(this, id)
     }
 
+    // Cancel if CallExpression has not beed parsed
     this.endParsing()
 
-    return callee
+    return id
   }
 
   public startParsing (): void {
