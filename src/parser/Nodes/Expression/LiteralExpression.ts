@@ -1,22 +1,25 @@
 import AbstractNodeParser from '../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../Scanner/Token.js'
+import { NodeSourceContext } from '../AbstractNode.js'
 import { AST_NODE_TYPE } from '../AstNode.js'
-import Expression from './Expression.js'
+import AbstractExpression from './AbstractExpression.js'
 
 export type Literal = string | number | boolean | null
 export type LiteralKind = 'string' | 'number' | 'boolean' | 'null'
 
-export default class LiteralExpression extends Expression {
+export default class LiteralExpression extends AbstractExpression {
+  public type: AST_NODE_TYPE = AST_NODE_TYPE.LITERAL_EXPRESSION
   public readonly literal: Literal
   public readonly kind: LiteralKind
 
-  constructor (literal: Literal, kind: LiteralKind) {
-    super(AST_NODE_TYPE.LITERAL_EXPRESSION)
+  constructor (sourceContext: NodeSourceContext, literal: Literal, kind: LiteralKind) {
+    super(sourceContext)
     this.literal = literal
     this.kind = kind
   }
 
   static fromParser (parser: AbstractNodeParser): LiteralExpression {
+    parser.startParsing()
     const tokenType = parser.getLookahead().type
     const value = parser.getLookahead().value as Literal
 
@@ -31,6 +34,6 @@ export default class LiteralExpression extends Expression {
 
     parser.consume(tokenType)
 
-    return new LiteralExpression(value, kind)
+    return new LiteralExpression(parser.endParsing(), value, kind)
   }
 }
