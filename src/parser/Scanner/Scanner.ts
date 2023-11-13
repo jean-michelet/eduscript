@@ -232,15 +232,24 @@ export default class Scanner implements ScannerInterface {
     }
 
     if (char === 'n') {
+      if (this._followedBy('ew')) {
+        return this._createToken(TokenType.NEW)
+      }
+
       if (this._followedBy('umber')) {
         return this._createToken(TokenType.BUILTIN_TYPE)
       }
+
       if (this._followedBy('ull')) {
         return this._createToken(TokenType.BUILTIN_TYPE)
       }
     }
 
     if (char === 'p') {
+      if (this._followedBy('arent')) {
+        return this._createToken(TokenType.PARENT)
+      }
+
       if (this._followedBy('ublic')) {
         return this._createToken(TokenType.PUBLIC)
       }
@@ -268,8 +277,14 @@ export default class Scanner implements ScannerInterface {
       }
     }
 
-    if (char === 't' && this._followedBy('rue')) {
-      return this._boolean()
+    if (char === 't') {
+      if (this._followedBy('rue')) {
+        return this._boolean()
+      }
+
+      if (this._followedBy('his')) {
+        return this._createToken(TokenType.THIS)
+      }
     }
 
     if (char === 'v' && this._followedBy('oid')) {
