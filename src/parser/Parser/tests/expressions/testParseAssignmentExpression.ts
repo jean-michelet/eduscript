@@ -1,5 +1,4 @@
 import AssignmentExpression from '../../../Nodes/Expression/AssignmentExpression.js'
-import Identifier from '../../../Nodes/Expression/Identifier.js'
 import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
 import { expectSourceContext, parseExpression, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
 
@@ -13,7 +12,7 @@ export default function (): void {
         endTokenPos: 5
       })
 
-      expect((expr.left as Identifier).name).toBe('a')
+      expect(expr.left.name).toBe('a')
       expect((expr.right as LiteralExpression).literal).toBe(2)
     })
 
