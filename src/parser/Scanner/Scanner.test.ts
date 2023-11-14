@@ -85,6 +85,17 @@ describe('Scanner Tests', () => {
     testScanToken(lexeme, tokenType)
   }
 
+  test('should accept identifiers starting with keyword substring, e.i. letter (starts with let)', () => {
+    scanner.init('letVar whileVar')
+    let token = scanner.scanToken()
+    expect(token.type).toBe(TokenType.IDENTIFIER)
+    expect(token.lexeme).toBe('letVar')
+
+    token = scanner.scanToken()
+    expect(token.type).toBe(TokenType.IDENTIFIER)
+    expect(token.lexeme).toBe('whileVar')
+  })
+
   test('should skip comments', () => {
     scanner.init(`
       // this is a single-line comment
