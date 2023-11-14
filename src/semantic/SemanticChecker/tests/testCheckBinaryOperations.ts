@@ -18,6 +18,12 @@ export default function (): void {
       expect(checkedAst.report.errors[i]).toBeInstanceOf(TypeError)
       expect(checkedAst.report.errors[i].message).toStartWith(`Operator '${op}' can only be applied to 'number'`)
     })
+
+    expect(checkedAst.report.errors[0].message).toStartWith(
+      `Operator '+' can only be applied to 'number' types at line 1:0
+      > "a" + "b"; "a" - "b"; true * false; true / false;
+        ^`
+    )
   })
 
   test('should not allow division by zero', () => {
