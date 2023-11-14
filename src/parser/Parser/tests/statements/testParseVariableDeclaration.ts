@@ -58,12 +58,6 @@ export default function (): void {
       expect((expr.init as LiteralExpression).literal).toBe(1)
     })
 
-    test('should throw error when constant declaration is not initialized', () => {
-      expect(() => {
-        parseStatements('const a: number;')
-      }).toThrow(new SyntaxError('const declaration must be initialized.'))
-    })
-
     test('should throw error when variable declaration is not typed', () => {
       expect(() => {
         parseStatements('const a;')

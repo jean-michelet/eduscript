@@ -2,8 +2,10 @@ import ContextMismatchError from './errors/ContextMismatchError.js'
 
 export enum Context {
   TOP = 'TOP',
+  BLOCK = 'BLOCK',
   LOOP = 'LOOP',
   FUNCTION = 'FUNCTION',
+  CLASS = 'CLASS',
 }
 
 export default class ContextStack {

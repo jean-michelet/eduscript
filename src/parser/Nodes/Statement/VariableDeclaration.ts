@@ -33,8 +33,6 @@ export default class VariableDeclaration extends AbstractStatement {
     if (!parser.lookaheadHasType(TokenType.SEMI_COLON)) {
       parser.consume(TokenType.ASSIGN)
       init = parser.expression()
-    } else if (kind === 'const') {
-      throw new SyntaxError('const declaration must be initialized.')
     }
 
     parser.consume(TokenType.SEMI_COLON)

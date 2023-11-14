@@ -3,7 +3,7 @@ import { TokenType } from '../../Scanner/Token.js'
 import AbstractNode, { AST_NODE_TYPE, NodeSourceContext } from '../AbstractNode.js'
 import Identifier from './Identifier.js'
 
-export type BuiltinType = 'number' | 'string' | 'boolean' | 'void' | 'null'
+export type BuiltinType = 'number' | 'string' | 'boolean' | 'void' | 'null' | 'undefined'
 
 export class TypeAnnotation extends AbstractNode {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.TYPE_ANNOTATION
