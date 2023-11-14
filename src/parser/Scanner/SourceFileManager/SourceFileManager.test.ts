@@ -35,7 +35,7 @@ describe('SourceFileManager', () => {
     })
   })
 
-  describe('getLineWithHighlightedToken', () => {
+  describe('getLineWithToken', () => {
     it('should correctly highlight a token at the start of a line', () => {
       const token: Token = {
         type: TokenType.IDENTIFIER,
@@ -47,7 +47,7 @@ describe('SourceFileManager', () => {
         endPos: lastLinePos + 1
       }
 
-      const highlightedLine = manager.getLineWithHighlightedToken(3, token)
+      const highlightedLine = manager.getLineWithToken(3, token.startPos)
 
       expect(highlightedLine.line).toContain(`
       > a = 13;
@@ -65,7 +65,7 @@ describe('SourceFileManager', () => {
         endPos: lastLinePos + lastLine.length
       } satisfies Token
 
-      const highlightedLine = manager.getLineWithHighlightedToken(3, token)
+      const highlightedLine = manager.getLineWithToken(3, token.startPos)
 
       expect(highlightedLine.line).toContain(`
       > a = 13;
@@ -84,7 +84,7 @@ describe('SourceFileManager', () => {
         endPos: startPos + 1
       } satisfies Token
 
-      const highlightedLine = manager.getLineWithHighlightedToken(3, token)
+      const highlightedLine = manager.getLineWithToken(3, token.startPos)
 
       expect(highlightedLine.line).toContain(`
       > a = 13;

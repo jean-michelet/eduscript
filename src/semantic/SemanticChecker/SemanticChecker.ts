@@ -6,6 +6,9 @@ import Type from '../Type.js'
 import AbstractStatement from '../../parser/Nodes/Statement/AbstractStatement.js'
 import ExpressionStatement from '../../parser/Nodes/Statement/ExpressionStatement.js'
 import AbstractExpression from '../../parser/Nodes/Expression/AbstractExpression.js'
+import ParenthesizedExpression from '../../parser/Nodes/Expression/ParenthesizedExpression.js'
+import ErrorManager from '../ErrorManager/ErrorManager.js'
+import SourceFileManager from '../../parser/Scanner/SourceFileManager/SourceFileManager.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -14,15 +17,15 @@ export interface SemanticCheckerInterface {
 }
 
 export default class SemanticChecker implements SemanticCheckerInterface {
-  private _errors: string[] = []
+  private _errorHandler = new ErrorManager(new SourceFileManager(''))
 
   public check (program: Program): CheckedProgram {
-    this._errors = []
+    this._errorHandler = new ErrorManager(program.source)
 
     this._checkStmtList(program.body.statements)
 
     return new CheckedProgram(program, {
-      errors: this._errors
+      errors: this._errorHandler.errors
     })
   }
 
@@ -43,6 +46,10 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       return this._checkBinaryExpression(expr)
     }
 
+    if (expr instanceof ParenthesizedExpression) {
+      return this._checkExpr(expr.expression)
+    }
+
     if (expr instanceof LiteralExpression) {
       return new Type(expr.kind, expr.literal)
     }
@@ -60,17 +67,17 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       case '*':
       case '/':
         if (left.name !== 'number' || right.name !== 'number') {
-          this._errors.push(`Type error: Operator '${expr.operator}' can only be applied to 'number' types.`)
+          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
         }
 
         if (expr.operator === '/' && right.value === 0) {
-          this._errors.push('Semantic error: Division by zero is not allowed.')
+          this._errorHandler.addLogicError('Division by zero is not allowed.', expr.sourceContext)
         }
         return new Type('number')
       case '==':
       case '!=':
         if (left.name !== right.name) {
-          this._errors.push(`Type error: Operator '${expr.operator}' requires operands of the same type, but got '${left.name}' and '${right.name}'.`)
+          this._errorHandler.addTypeError(`Operator '${expr.operator}' requires operands of the same type, but got '${left.name}' and '${right.name}'`, expr.sourceContext)
         }
 
         break
@@ -79,21 +86,17 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       case '>=':
       case '<=':
         if (left.name !== 'number' || right.name !== 'number') {
-          this._errors.push(`Type error: Operator '${expr.operator}' can only be applied to 'number' types.`)
+          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
         }
 
         break
       case '&&':
       case '||':
         if (left.name !== 'boolean' || right.name !== 'boolean') {
-          this._errors.push(`Type error: Operator '${expr.operator}' can only be applied to 'boolean' types.`)
+          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'boolean' types`, expr.sourceContext)
         }
     }
 
     return new Type('boolean')
-  }
-
-  _typeError (message: string): void {
-    this._errors.push(`Type error: ${message}`)
   }
 }

@@ -1,15 +1,15 @@
 import Program from '../parser/Nodes/Program.js'
 
 export interface AbstractCheckedProgramAttributes {
-  errors: string[]
+  errors: Error[]
 }
 
 export default class AbstractCheckedProgram {
   public readonly program: Program
-  public readonly attributes: AbstractCheckedProgramAttributes
+  public readonly report: AbstractCheckedProgramAttributes
 
-  constructor (program: Program, attributes: AbstractCheckedProgramAttributes) {
+  constructor (program: Program, report: AbstractCheckedProgramAttributes) {
     this.program = program
-    this.attributes = attributes
+    this.report = report
   }
 }

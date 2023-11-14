@@ -15,7 +15,7 @@ const jestConfig: JestConfigWithTsJest = {
         useESM: true
       }
     ]
-  }
+  },
 }
 
 export default jestConfig

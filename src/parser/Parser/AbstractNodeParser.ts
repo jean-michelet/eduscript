@@ -28,17 +28,21 @@ import ParsingSequenceError from './errors/ParsingSequenceError.js'
 import AbstractExpression, { LeftHandSideExpression, PrimaryExpression } from '../Nodes/Expression/AbstractExpression.js'
 import ParenthesizedExpression from '../Nodes/Expression/ParenthesizedExpression.js'
 import NewExpression from '../Nodes/Expression/NewExpression.js'
+import SourceFileManager from '../Scanner/SourceFileManager/SourceFileManager.js'
 
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
-  public lookahead: Token
   private _tokens: Token[] = []
   private _parsingContext: Token[] = []
+  public lookahead: Token
+  public source: SourceFileManager
+
   public readonly contextStack: ContextStack = new ContextStack()
   private readonly _scanner: ScannerInterface
 
   constructor (scanner: ScannerInterface) {
     this._scanner = scanner
+    this.source = scanner.getSource()
     this.lookahead = this._prevLookahead = {
       type: TokenType.EOF,
       lexeme: '',
@@ -52,6 +56,7 @@ export default abstract class AbstractNodeParser {
 
   parse (input: string): Program {
     this._scanner.init(input)
+    this.source = this._scanner.getSource()
     this._tokens = this._scanner.scan()
     this.lookahead = this._prevLookahead = this.getNextToken()
     this._parsingContext = []

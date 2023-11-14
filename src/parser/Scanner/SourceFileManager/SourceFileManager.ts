@@ -1,5 +1,3 @@
-import { Token } from '../Token.js'
-
 interface LineInfo {
   line: string
   lineNumber: number
@@ -15,11 +13,9 @@ export default class SourceFileManager {
     let lineNumber = 1
 
     this._lines = new Map()
-
     for (const line of src.split('\n')) {
       const endPos = startPos + line.length
       this._lines.set(lineNumber, { line, lineNumber, startPos, endPos })
-
       startPos += line.length + 1
       lineNumber++
     }
@@ -33,10 +29,15 @@ export default class SourceFileManager {
     return this._lines.get(lineNumber) as LineInfo
   }
 
-  public getLineWithHighlightedToken (lineNumber: number, token: Token): LineInfo {
+  public getLineWithToken (lineNumber: number, startPos: number): LineInfo {
     const lineInfo = this.getLineInfo(lineNumber)
-    const start = token.startPos - lineInfo.startPos
 
+    const start = startPos - lineInfo.startPos
+
+    return this._textWithCursor(lineInfo, start)
+  }
+
+  private _textWithCursor (lineInfo: LineInfo, start: number): { line: string, lineNumber: number, startPos: number, endPos: number } {
     const cursor = ' '.repeat(lineInfo.line.length).substring(0, start) + '^'
 
     const line = `

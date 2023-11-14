@@ -2,6 +2,7 @@ import SourceFileManager from './SourceFileManager/SourceFileManager.js'
 import { Token, TokenType, TokenValue } from './Token.js'
 
 export interface ScannerInterface {
+  getSource: () => SourceFileManager
   init: (src: string) => void
   scan: () => Token[]
   scanToken: () => Token
@@ -15,6 +16,10 @@ export default class Scanner implements ScannerInterface {
   private _endLine = 0
   private readonly _whitespaceChars = [' ', '\r', '\t', '\n']
   private _sourceFile: SourceFileManager = new SourceFileManager('')
+
+  getSource (): SourceFileManager {
+    return this._sourceFile
+  }
 
   init (src: string = ''): void {
     this._src = src
@@ -73,8 +78,7 @@ export default class Scanner implements ScannerInterface {
       return this._identifier()
     }
 
-    const invalidToken = this._createToken(TokenType.INVALID)
-    const lineInfo = this._sourceFile.getLineWithHighlightedToken(this._endLine, invalidToken)
+    const lineInfo = this._sourceFile.getLineWithToken(this._endLine, this._startTokenPos)
 
     throw new SyntaxError(`Unexpected char '${char}' at line ${this._endLine}:${this._startTokenPos}.${lineInfo.line}`)
   }
