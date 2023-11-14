@@ -15,6 +15,8 @@ import Identifier from '../../parser/Nodes/Expression/Identifier.js'
 import { TypeAnnotation } from '../../parser/Nodes/Expression/TypeAnnotation.js'
 import { NodeSourceContext } from '../../parser/Nodes/AbstractNode.js'
 import { Context } from '../../ContextStack/ContextStack.js'
+import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
+import { Symbol_ } from '../../Env/Scope.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -46,6 +48,11 @@ export default class SemanticChecker implements SemanticCheckerInterface {
   }
 
   private _checkStmt (stmt: AbstractStatement): void {
+    if (stmt instanceof BlockStatement) {
+      this._env.enterScope()
+      this._checkStmtList(stmt.statements)
+      this._env.leaveScope()
+    }
     if (stmt instanceof VariableDeclaration) {
       this._checkVariableDeclaration(stmt)
     }
@@ -85,7 +92,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
 
   private _checkVariableDeclaration (varStmt: VariableDeclaration): void {
     const id = varStmt.identifier.name
-    if (this._env.hasSymbol(id)) {
+    if (this._env.getScope().has(id)) {
       return this._errorHandler.addLogicError(`Cannot redeclare block-scoped variable '${id}'`, varStmt.sourceContext)
     }
 
@@ -94,13 +101,13 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     }
 
     const type = this._checkExpr(varStmt.typeAnnotation)
-    const init: Type = (varStmt.init != null) ? this._checkExpr(varStmt.init) : new Type(type.name)
+    const init: Type = (varStmt.init !== null) ? this._checkExpr(varStmt.init) : new Type(type.name)
 
     if ((varStmt.init != null) && type.name !== init.name) {
       this._notAssignableType(type, init, varStmt.init.sourceContext)
     }
 
-    this._env.define({
+    this._env.getScope().define({
       id,
       kind: varStmt.kind,
       type
@@ -108,13 +115,14 @@ export default class SemanticChecker implements SemanticCheckerInterface {
   }
 
   private _checkVarAccess (id: Identifier): Type {
-    if (!this._env.hasSymbol(id.name)) {
+    const symbol: Symbol_ | null = this._env.resolve(id.name)
+    if (symbol == null) {
       this._errorHandler.addRefError(`${id.name} is not defined`, id.sourceContext)
 
       return new Type('undefined')
     }
 
-    return this._env.resolve(id.name).type
+    return symbol.type
   }
 
   private _checkBinaryExpression (expr: BinaryExpression): Type {

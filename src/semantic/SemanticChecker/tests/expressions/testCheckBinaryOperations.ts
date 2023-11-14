@@ -1,4 +1,4 @@
-import { checker, parser } from './SemanticChecker.test.js'
+import { checker, parser } from '../SemanticChecker.test.js'
 
 export default function (): void {
   test('should validate arithmetic operators with numbers', () => {

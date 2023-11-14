@@ -18,6 +18,10 @@ export default class Scope {
     this._symbols.set(symbol.id, symbol)
   }
 
+  has (id: string): boolean {
+    return this._symbols.has(id)
+  }
+
   resolve (id: string): Symbol_ | null {
     return this._symbols.get(id) ?? null
   }

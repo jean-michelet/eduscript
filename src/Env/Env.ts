@@ -6,18 +6,9 @@ export default class Env {
   private readonly _scopes: Map<number, Scope> = new Map()
   private readonly _contextStack: ContextStack = new ContextStack()
 
-  hasSymbol (id: string): boolean {
-    return this.getScope().resolve(id) !== null
-  }
-
-  define (symbol: Symbol_): void {
-    this.getScope().define(symbol)
-  }
-
-  resolve (id: string): Symbol_ {
+  resolve (id: string): Symbol_ | null {
     let scopePointer = this._scopePointer
-
-    while (scopePointer >= 0) {
+    while (scopePointer > 0) {
       const scope = this._scopes.get(scopePointer)
       if (scope != null) {
         const symbol = scope.resolve(id)
@@ -26,12 +17,12 @@ export default class Env {
       scopePointer--
     }
 
-    throw new ReferenceError(`Variable '${id}' is not defined`)
+    return null
   }
 
   enterScope (context: Context = Context.BLOCK): void {
-    this._scopes.set(++this._scopePointer, new Scope())
     this._contextStack.enter(context)
+    this._scopes.set(++this._scopePointer, new Scope())
   }
 
   leaveScope (context: Context = Context.BLOCK): void {

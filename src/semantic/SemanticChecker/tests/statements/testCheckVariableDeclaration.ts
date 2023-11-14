@@ -1,4 +1,4 @@
-import { checker, parser } from './SemanticChecker.test.js'
+import { checker, parser } from '../SemanticChecker.test.js'
 
 export default function (): void {
   test('should allow valid variable declarations', () => {
@@ -44,6 +44,28 @@ export default function (): void {
             let a: number = 5;
             {
                 let a: string = "nested scope";
+            }
+        `)
+    const checkedAst = checker.check(ast)
+
+    expect(checkedAst.report.errors).toHaveLength(0)
+  })
+
+  test('should not allow access to undeclared variable', () => {
+    const ast = parser.parse('b;')
+    const checkedAst = checker.check(ast)
+
+    expect(checkedAst.report.errors).toHaveLength(1)
+    expect(checkedAst.report.errors[0]).toBeInstanceOf(ReferenceError)
+    expect(checkedAst.report.errors[0].message).toStartWith('b is not defined at line 1:0')
+  })
+
+  test('should allow access to declared variable', () => {
+    const ast = parser.parse(`
+            let a: number = 5;
+            a;
+            {
+                a;
             }
         `)
     const checkedAst = checker.check(ast)
