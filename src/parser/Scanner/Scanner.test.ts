@@ -49,6 +49,7 @@ describe('Scanner Tests', () => {
     ['&&', TokenType.LOGICAL_AND],
     ['||', TokenType.LOGICAL_OR],
     ['=', TokenType.ASSIGN],
+    ['->', TokenType.ARROW],
     ['let', TokenType.LET],
     ['class', TokenType.CLASS],
     ['extends', TokenType.EXTENDS],

@@ -113,7 +113,7 @@ export default function (): void {
     if (property.init !== null) {
       expect(property.init?.type).toBe(AST_NODE_TYPE.LITERAL_EXPRESSION)
     }
-    expect(property.typeAnnotation.typedef.name).toBe(type)
+    expect(property.typedef.name).toBe(type)
     expectMember(property, id, visibility, isStatic)
   }
 

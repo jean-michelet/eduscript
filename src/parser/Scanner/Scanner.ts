@@ -113,6 +113,10 @@ export default class Scanner implements ScannerInterface {
       // arithmetic operators
       case '+':
       case '-':
+        if (this._peek() === '>') {
+          this._advance()
+          return this._createToken(TokenType.ARROW)
+        }
         return this._createToken(TokenType.ADDITIVE)
       case '*':
       case '/':

@@ -29,6 +29,9 @@ import AbstractExpression, { LeftHandSideExpression, PrimaryExpression } from '.
 import ParenthesizedExpression from '../Nodes/Expression/ParenthesizedExpression.js'
 import NewExpression from '../Nodes/Expression/NewExpression.js'
 import SourceFileManager from '../Scanner/SourceFileManager/SourceFileManager.js'
+import Type, { BuiltinType } from '../../semantic/types/Type.js'
+import ArrayType from '../../semantic/types/ArrayType.js'
+import TypeRef from '../../semantic/types/TypeRef.js'
 
 export default abstract class AbstractNodeParser {
   private _prevLookahead: Token
@@ -227,21 +230,43 @@ export default abstract class AbstractNodeParser {
     return id
   }
 
-  public parseArgs (parser: AbstractNodeParser): AbstractExpression[] {
+  public parseArgs (): AbstractExpression[] {
     const args: AbstractExpression[] = []
 
     // argument list shouldn't start or end with a coma: ','
-    while (!parser.eof() && !parser.lookaheadHasType(TokenType.COMA) && !parser.lookaheadHasType(TokenType.RIGHT_PAREN)) {
-      args.push(parser.expression())
+    while (!this.eof() && !this.lookaheadHasType(TokenType.COMA) && !this.lookaheadHasType(TokenType.RIGHT_PAREN)) {
+      args.push(this.expression())
 
-      if (!parser.lookaheadHasType(TokenType.COMA)) {
+      if (!this.lookaheadHasType(TokenType.COMA)) {
         break
       }
 
-      parser.consume(TokenType.COMA)
+      this.consume(TokenType.COMA)
     }
 
     return args
+  }
+
+  public parseType (typeSymbol: TokenType.COLON | TokenType.ARROW = TokenType.COLON): Type {
+    this.consume(typeSymbol)
+
+    let type: Type
+    if (this.lookaheadHasType(TokenType.BUILTIN_TYPE)) {
+      const lexeme = this.consume(TokenType.BUILTIN_TYPE).lexeme as BuiltinType
+      type = new Type(lexeme)
+    } else {
+      type = new TypeRef(Identifier.fromParser(this))
+    }
+
+    if (this.lookaheadHasType(TokenType.LEFT_BRACKET)) {
+      this.consume(TokenType.LEFT_BRACKET)
+
+      type = new ArrayType(type)
+
+      this.consume(TokenType.RIGHT_BRACKET)
+    }
+
+    return type
   }
 
   public startParsing (): void {

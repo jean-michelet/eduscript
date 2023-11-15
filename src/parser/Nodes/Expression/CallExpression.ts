@@ -19,7 +19,7 @@ export default class CallExpression extends AbstractExpression {
   static fromParser (parser: AbstractNodeParser, id: Identifier | MemberExpression): CallExpression {
     parser.consume(TokenType.LEFT_PAREN)
 
-    const args = parser.parseArgs(parser)
+    const args = parser.parseArgs()
 
     parser.consume(TokenType.RIGHT_PAREN)
 

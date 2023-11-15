@@ -6,13 +6,13 @@ import AssignmentPattern from '../Expression/AssignmentPattern.js'
 import Identifier from '../Expression/Identifier.js'
 import BlockStatement from './BlockStatement.js'
 import AbstractStatement from './AbstractStatement.js'
-import { TypeAnnotation } from '../Expression/TypeAnnotation.js'
+import Type from '../../../semantic/types/Type.js'
 
 export class FunctionParameter {
   public readonly expr: Identifier | AssignmentPattern
-  public readonly type: TypeAnnotation
+  public readonly type: Type
 
-  constructor (expr: Identifier | AssignmentPattern, type: TypeAnnotation) {
+  constructor (expr: Identifier | AssignmentPattern, type: Type) {
     this.expr = expr
     this.type = type
   }
@@ -22,6 +22,7 @@ export default class FunctionDeclaration extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.FUNCTION_DECLARATION
   public readonly identifier: Identifier
   public readonly params: FunctionParameter[]
+  // public readonly returnType: Type
   public readonly body: BlockStatement
 
   constructor (sourceContext: NodeSourceContext, identifier: Identifier, params: FunctionParameter[], body: BlockStatement) {
@@ -40,7 +41,7 @@ export default class FunctionDeclaration extends AbstractStatement {
     while (!parser.lookaheadHasType(TokenType.LEFT_CBRACE)) {
       parser.startParsing()
       let expr: Identifier | AssignmentPattern = Identifier.fromParser(parser)
-      const type = TypeAnnotation.fromParser(parser)
+      const type = parser.parseType()
 
       if (parser.lookaheadHasType(TokenType.ASSIGN)) {
         parser.consume(TokenType.ASSIGN)
@@ -57,6 +58,8 @@ export default class FunctionDeclaration extends AbstractStatement {
 
       parser.consume(TokenType.COMA)
     }
+
+    // const returnType = parser.parseType(TokenType.ARROW)
 
     parser.contextStack.enter(Context.FUNCTION)
     const body = BlockStatement.fromParser(parser)

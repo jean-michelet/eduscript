@@ -14,7 +14,7 @@ export default function (): void {
       expect(stmts[0]).toBeInstanceOf(VariableDeclaration)
       let expr = stmts[0] as VariableDeclaration
       expect(expr.identifier.name).toBe('a')
-      expect(expr.typeAnnotation.typedef.name).toBe('boolean')
+      expect(expr.typedef.name).toBe('boolean')
       expect(expr.kind).toBe('let')
       expect(expr.init).toBe(null)
 
@@ -23,9 +23,9 @@ export default function (): void {
       })
 
       expr = stmts[1] as VariableDeclaration
-      expect(expr.typeAnnotation.typedef).toBeInstanceOf(ArrayType)
-      expect((expr.typeAnnotation.typedef as ArrayType).type).toBeInstanceOf(TypeRef)
-      expect(expr.typeAnnotation.typedef.name).toBe('Foo[]')
+      expect(expr.typedef).toBeInstanceOf(ArrayType)
+      expect((expr.typedef as ArrayType).type).toBeInstanceOf(TypeRef)
+      expect(expr.typedef.name).toBe('Foo[]')
       expect((expr.init as LiteralExpression).literal).toBe(1)
       expectSourceContext(expr, {
         startTokenPos: 'let a: boolean;'.length + 1,
@@ -41,8 +41,8 @@ export default function (): void {
       expect(stmts[0]).toBeInstanceOf(VariableDeclaration)
 
       const expr = stmts[0] as VariableDeclaration
-      expect(expr.typeAnnotation.typedef).toBeInstanceOf(TypeRef)
-      expect(expr.typeAnnotation.typedef.name).toBe('Foo')
+      expect(expr.typedef).toBeInstanceOf(TypeRef)
+      expect(expr.typedef.name).toBe('Foo')
       expect((expr.init as LiteralExpression).literal).toBe(1)
     })
 

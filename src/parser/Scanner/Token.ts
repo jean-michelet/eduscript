@@ -22,6 +22,7 @@ export enum TokenType {
   RIGHT_CBRACE = 'RIGHT_CBRACE',
   LEFT_BRACKET = 'LEFT_BRACKET',
   RIGHT_BRACKET = 'RIGHT_BRACKET',
+  ARROW = 'ARROW',
 
   // arithmetic operators
   ADDITIVE = 'ADDITIVE',

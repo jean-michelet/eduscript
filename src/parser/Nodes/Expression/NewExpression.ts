@@ -23,7 +23,7 @@ export default class NewExpression extends AbstractExpression {
 
     parser.consume(TokenType.LEFT_PAREN)
 
-    const args = parser.parseArgs(parser)
+    const args = parser.parseArgs()
 
     parser.consume(TokenType.RIGHT_PAREN)
 

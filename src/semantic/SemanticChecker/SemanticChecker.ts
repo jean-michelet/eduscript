@@ -12,7 +12,6 @@ import SourceFileManager from '../../parser/Scanner/SourceFileManager/SourceFile
 import Env from '../../Env/Env.js'
 import VariableDeclaration from '../../parser/Nodes/Statement/VariableDeclaration.js'
 import Identifier from '../../parser/Nodes/Expression/Identifier.js'
-import { TypeAnnotation } from '../../parser/Nodes/Expression/TypeAnnotation.js'
 import AbstractNode from '../../parser/Nodes/AbstractNode.js'
 import { Context } from '../../ContextStack/ContextStack.js'
 import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
@@ -87,14 +86,6 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       return this._checkVarAccess(expr)
     }
 
-    if (expr instanceof TypeAnnotation) {
-      if (expr.typedef instanceof Identifier) {
-        return this._checkVarAccess(expr.typedef)
-      }
-
-      return expr.typedef
-    }
-
     if (expr instanceof BinaryExpression) {
       return this._checkBinaryExpression(expr)
     }
@@ -132,7 +123,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       this._errorManager.addLogicError('\'const\' declarations must be initialized.', varStmt.identifier.sourceContext)
     }
 
-    const type = this._checkExpr(varStmt.typeAnnotation)
+    const type = varStmt.typedef
     const init: Type = (varStmt.init !== null) ? this._checkExpr(varStmt.init) : new Type(type.name)
 
     if ((varStmt.init !== null)) {

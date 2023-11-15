@@ -3,7 +3,6 @@ import { TokenType } from '../../../Scanner/Token.js'
 import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import AbstractExpression from '../../Expression/AbstractExpression.js'
 import Identifier from '../../Expression/Identifier.js'
-import { TypeAnnotation } from '../../Expression/TypeAnnotation.js'
 import AbstractStatement from '../AbstractStatement.js'
 import FunctionDeclaration from '../FunctionDeclaration.js'
 import MethodDefinition from './MethodDefinition.js'
@@ -57,7 +56,7 @@ export default class ClassBody extends AbstractStatement {
     }
 
     const id = Identifier.fromParser(parser)
-    const type = TypeAnnotation.fromParser(parser)
+    const type = parser.parseType()
 
     let init: AbstractExpression | null = null
     if (parser.lookaheadHasType(TokenType.ASSIGN)) {

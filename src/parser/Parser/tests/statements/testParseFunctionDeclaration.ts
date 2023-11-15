@@ -47,7 +47,7 @@ export default function (): void {
       expect(myFunction2.identifier.name).toBe('myFunction2')
       expect(myFunction2.params).toHaveLength(2)
       myFunction2.params.forEach(param => {
-        expect(param.type.typedef.name).toBe('number')
+        expect(param.type.name).toBe('number')
       })
     })
   })
