@@ -6,6 +6,7 @@ import * as matchers from 'jest-extended'
 import testCheckVariableDeclaration from './statements/testCheckVariableDeclaration.js'
 import AbstractCheckedProgram from '../../AbstractCheckedProgram.js'
 import testCheckAssignement from './expressions/testCheckAssignement.js'
+import testCheckIfStatement from './statements/testCheckIfStatement.js'
 expect.extend(matchers)
 
 const parser = new Parser(new Scanner())
@@ -22,4 +23,5 @@ describe('SemanticChecker Tests', () => {
   testCheckAssignement()
 
   testCheckVariableDeclaration()
+  testCheckIfStatement()
 })

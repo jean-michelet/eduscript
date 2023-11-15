@@ -18,6 +18,7 @@ import { Context } from '../../ContextStack/ContextStack.js'
 import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
 import { Symbol_ } from '../../Env/Scope.js'
 import AssignmentExpression from '../../parser/Nodes/Expression/AssignmentExpression.js'
+import IfStatement from '../../parser/Nodes/Statement/IfStatement.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -58,8 +59,22 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       this._checkVariableDeclaration(stmt)
     }
 
+    if (stmt instanceof IfStatement) {
+      this._checkIf(stmt)
+    }
+
     if (stmt instanceof ExpressionStatement) {
       this._checkExpr(stmt.expression)
+    }
+  }
+
+  private _checkIf (stmt: IfStatement): void {
+    this._checkExpectedType('boolean', this._checkExpr(stmt.test), stmt)
+
+    this._checkStmt(stmt.consequent)
+
+    if (stmt.alternate != null) {
+      this._checkStmt(stmt.alternate)
     }
   }
 
@@ -89,18 +104,22 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     }
 
     if (expr instanceof AssignmentExpression) {
-      const left = this._checkExpr(expr.left)
-      const right = this._checkExpr(expr.right)
-      this._checkExpectedType(
-        left.name,
-        right,
-        expr
-      )
-
-      return right
+      return this._checkAssignement(expr)
     }
 
     throw new Error('Unexpected Expression of type ' + expr.type.toString())
+  }
+
+  private _checkAssignement (expr: AssignmentExpression): Type {
+    const left = this._checkExpr(expr.left)
+    const right = this._checkExpr(expr.right)
+    this._checkExpectedType(
+      left.name,
+      right,
+      expr
+    )
+
+    return right
   }
 
   private _checkVariableDeclaration (varStmt: VariableDeclaration): void {
