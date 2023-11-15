@@ -42,16 +42,16 @@ export default function (): void {
 
     test('class declaration can have properties', () => {
       const src = `class Foo { 
-          myImplicitPulicProp = 1;
+          myImplicitPulicProp: number = 1;
 
-          public myExplicitPulicProp = 1;
+          public myExplicitPulicProp: number = 1;
 
-          protected myProtectedProp = 1;
+          protected myProtectedProp: number = 1;
 
-          private myPrivateProp = 1;
+          private myPrivateProp: number = 1;
 
           // static without initialisation is illegal but enforced during semantic analysis
-          static public myStaticProp;
+          static public myStaticProp: number = 1;
       }`
       const stmts = parseStatements(src)
 

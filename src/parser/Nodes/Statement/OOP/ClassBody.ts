@@ -3,6 +3,7 @@ import { TokenType } from '../../../Scanner/Token.js'
 import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import AbstractExpression from '../../Expression/AbstractExpression.js'
 import Identifier from '../../Expression/Identifier.js'
+import { TypeAnnotation } from '../../Expression/TypeAnnotation.js'
 import AbstractStatement from '../AbstractStatement.js'
 import FunctionDeclaration from '../FunctionDeclaration.js'
 import MethodDefinition from './MethodDefinition.js'
@@ -56,6 +57,7 @@ export default class ClassBody extends AbstractStatement {
     }
 
     const id = Identifier.fromParser(parser)
+    const type = TypeAnnotation.fromParser(parser)
 
     let init: AbstractExpression | null = null
     if (parser.lookaheadHasType(TokenType.ASSIGN)) {
@@ -65,7 +67,7 @@ export default class ClassBody extends AbstractStatement {
 
     parser.consume(TokenType.SEMI_COLON)
 
-    return new PropertyDefinition(parser.endParsing(), id, init, isStatic, visibility)
+    return new PropertyDefinition(parser.endParsing(), id, type, init, isStatic, visibility)
   }
 
   private static getMemberVisibility (parser: AbstractNodeParser): CLASS_MEMBER_VISIBILITY {
