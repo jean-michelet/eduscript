@@ -3,20 +3,22 @@ import { ParserInterface } from '../../parser/Parser/Parser.js'
 import BytecodeEmitter, { BytecodeProgram } from '../BytecodeEmitter/BytecodeEmitter.js'
 import { OP_CONST, OP_HALT } from '../instruction-set.js'
 
+type Value = Literal
+
 export default class VM {
   private static readonly STACK_LIMIT = 1024
   private readonly _parser: ParserInterface
   private readonly _emitter: BytecodeEmitter
   private _ip: number = 0
   private _program: BytecodeProgram = new BytecodeProgram()
-  private readonly _stack: Literal[] = []
+  private readonly _stack: Value[] = []
 
   constructor (parser: ParserInterface, emitter: BytecodeEmitter) {
     this._parser = parser
     this._emitter = emitter
   }
 
-  public exec (src: string): Literal {
+  public exec (src: string): Value {
     const ast = this._parser.parse(src)
     this._program = this._emitter.emit(ast)
 
@@ -50,7 +52,7 @@ export default class VM {
     return this._program.instructions[this._ip++]
   }
 
-  private _stackPush (value: Literal): void {
+  private _stackPush (value: Value): void {
     if (this._stack.length >= VM.STACK_LIMIT) {
       throw new Error('Stack overflow')
     }
@@ -58,7 +60,7 @@ export default class VM {
     this._stack.push(value)
   }
 
-  private _stackPop (): Literal {
+  private _stackPop (): Value {
     if (this._stack.length === 0) {
       throw new Error('Stack underflow')
     }
