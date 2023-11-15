@@ -21,8 +21,8 @@ export default function (): void {
     })
 
     test('should parse a function declaration with parameters', () => {
-      const fnSrc1 = 'fn myFunction a {}'
-      const fnSrc2 = 'fn myFunction2 a, b = 1 + 1 {}'
+      const fnSrc1 = 'fn myFunction a: number {}'
+      const fnSrc2 = 'fn myFunction2 a: number, b: number = 1 + 1 {}'
 
       const stmts = parseStatements(fnSrc1 + fnSrc2)
 

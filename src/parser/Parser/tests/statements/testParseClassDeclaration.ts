@@ -1,5 +1,6 @@
 import { AST_NODE_TYPE } from '../../../Nodes/AbstractNode.js'
 import Identifier from '../../../Nodes/Expression/Identifier.js'
+import { FunctionParameter } from '../../../Nodes/Statement/FunctionDeclaration.js'
 import { CLASS_MEMBER_VISIBILITY, ClassBodyStatement } from '../../../Nodes/Statement/OOP/ClassBody.js'
 import ClassDeclaration from '../../../Nodes/Statement/OOP/ClassDeclaration.js'
 import MethodDefinition from '../../../Nodes/Statement/OOP/MethodDefinition.js'
@@ -72,15 +73,15 @@ export default function (): void {
 
     test('class declaration can have methods', () => {
       const src = `class Foo { 
-        fn myImplicitPulicMethod a {}
+        fn myImplicitPulicMethod a: number {}
 
-        public fn myExplicitPulicMethod a {}
+        public fn myExplicitPulicMethod a: number {}
 
-        protected fn myProtectedMethod a {}
+        protected fn myProtectedMethod a: number {}
 
-        private fn myPrivateMethod a {}
+        private fn myPrivateMethod a: number {}
 
-        static public fn myStaticMethod a {}
+        static public fn myStaticMethod a: number {}
       }`
       const stmts = parseStatements(src)
 
@@ -103,7 +104,7 @@ export default function (): void {
 
   function expectMethod (method: MethodDefinition, id: string, visibility: CLASS_MEMBER_VISIBILITY, isStatic = false): void {
     expect(method).toBeInstanceOf(MethodDefinition)
-    expect(method.params[0]).toBeInstanceOf(Identifier)
+    expect(method.params[0]).toBeInstanceOf(FunctionParameter)
     expectMember(method, id, visibility, isStatic)
   }
 
