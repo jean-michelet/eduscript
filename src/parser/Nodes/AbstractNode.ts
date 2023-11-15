@@ -12,6 +12,10 @@ export default abstract class AbstractNode {
   constructor (sourceContext: NodeSourceContext) {
     this.sourceContext = sourceContext
   }
+
+  public hasType (type: AST_NODE_TYPE): boolean {
+    return this.type === type
+  }
 }
 
 export enum AST_NODE_TYPE {

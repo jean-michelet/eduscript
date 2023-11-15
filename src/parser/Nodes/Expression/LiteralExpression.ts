@@ -3,7 +3,7 @@ import { TokenType } from '../../Scanner/Token.js'
 import { NodeSourceContext, AST_NODE_TYPE } from '../AbstractNode.js'
 import AbstractExpression from './AbstractExpression.js'
 
-export type Literal = string | number | boolean | null
+export type Literal = string | number | boolean | null | undefined
 export type LiteralKind = 'string' | 'number' | 'boolean' | 'null'
 
 export default class LiteralExpression extends AbstractExpression {
