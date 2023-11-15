@@ -4,7 +4,7 @@ import { NodeSourceContext, AST_NODE_TYPE } from '../AbstractNode.js'
 import AbstractExpression from './AbstractExpression.js'
 
 export type Literal = string | number | boolean | null | undefined
-export type LiteralKind = 'string' | 'number' | 'boolean' | 'null'
+export type LiteralKind = 'string' | 'number' | 'boolean' | 'null' | 'undefined'
 
 export default class LiteralExpression extends AbstractExpression {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.LITERAL_EXPRESSION
@@ -19,15 +19,19 @@ export default class LiteralExpression extends AbstractExpression {
 
   static fromParser (parser: AbstractNodeParser): LiteralExpression {
     parser.startParsing()
-    const tokenType = parser.getLookahead().type
-    const value = parser.getLookahead().value as Literal
 
-    let kind: LiteralKind
-    if (tokenType === TokenType.NUMBER) {
+    const tokenType = parser.getLookahead().type
+    let value = parser.getLookahead().value as Literal
+    let kind: LiteralKind = 'null'
+
+    if (tokenType === TokenType.BUILTIN_TYPE) {
+      kind = parser.getLookahead().lexeme as LiteralKind
+      value = kind === 'null' ? null : undefined
+    } else if (tokenType === TokenType.NUMBER) {
       kind = 'number'
     } else if (tokenType === TokenType.STRING) {
       kind = 'string'
-    } else {
+    } else if (tokenType === TokenType.BOOLEAN) {
       kind = 'boolean'
     }
 

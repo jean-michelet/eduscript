@@ -47,5 +47,29 @@ export default function (): void {
       expect(expr.kind).toBe('boolean')
       expect(expr.literal).toBe(false)
     })
+
+    test('should parse a literal expression of type null', () => {
+      const expr = parseExpression('null;') as LiteralExpression
+
+      expect(expr).toBeInstanceOf(LiteralExpression)
+      expectSourceContext(expr, {
+        endTokenPos: 4
+      })
+
+      expect(expr.kind).toBe('null')
+      expect(expr.literal).toBe(null)
+    })
+
+    test('should parse a literal expression of type undefined', () => {
+      const expr = parseExpression('undefined;') as LiteralExpression
+
+      expect(expr).toBeInstanceOf(LiteralExpression)
+      expectSourceContext(expr, {
+        endTokenPos: 'undefined'.length
+      })
+
+      expect(expr.kind).toBe('undefined')
+      expect(expr.literal).toBe(undefined)
+    })
   })
 }

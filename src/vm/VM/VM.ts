@@ -1,13 +1,15 @@
 import { Literal } from '../../parser/Nodes/Expression/LiteralExpression.js'
 import { ParserInterface } from '../../parser/Parser/Parser.js'
 import BytecodeEmitter, { BytecodeProgram } from '../BytecodeEmitter/BytecodeEmitter.js'
-import { OP_HALT } from '../instruction-set.js'
+import { OP_CONST, OP_HALT } from '../instruction-set.js'
 
 export default class VM {
+  private static readonly STACK_LIMIT = 1024
   private readonly _parser: ParserInterface
   private readonly _emitter: BytecodeEmitter
   private _ip: number = 0
   private _program: BytecodeProgram = new BytecodeProgram()
+  private readonly _stack: Literal[] = []
 
   constructor (parser: ParserInterface, emitter: BytecodeEmitter) {
     this._parser = parser
@@ -25,11 +27,14 @@ export default class VM {
       this._execByte(opcode)
     }
 
-    return undefined
+    return this._stack.length > 0 ? this._stackPop() : undefined
   }
 
   private _execByte (opcode: number): void {
     switch (opcode) {
+      case OP_CONST:
+        this._stackPush(this._program.constants.pop())
+        break
       case OP_HALT:
         break
       default:
@@ -43,5 +48,21 @@ export default class VM {
     }
 
     return this._program.instructions[this._ip++]
+  }
+
+  private _stackPush (value: Literal): void {
+    if (this._stack.length >= VM.STACK_LIMIT) {
+      throw new Error('Stack overflow')
+    }
+
+    this._stack.push(value)
+  }
+
+  private _stackPop (): Literal {
+    if (this._stack.length === 0) {
+      throw new Error('Stack underflow')
+    }
+
+    return this._stack.pop()
   }
 }

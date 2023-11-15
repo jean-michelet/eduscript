@@ -154,8 +154,12 @@ export default abstract class AbstractNodeParser {
   }
 
   public primaryExpression (): PrimaryExpression {
-    const tokenType = this.getLookahead().type
-    switch (tokenType) {
+    const token = this.getLookahead()
+    if (this.lookaheadHasType(TokenType.BUILTIN_TYPE) && ['null', 'undefined'].includes(token.lexeme)) {
+      return LiteralExpression.fromParser(this)
+    }
+
+    switch (token.type) {
       case TokenType.NUMBER:
       case TokenType.STRING:
       case TokenType.BOOLEAN: {

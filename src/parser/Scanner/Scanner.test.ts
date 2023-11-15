@@ -78,6 +78,7 @@ describe('Scanner Tests', () => {
     ['string', TokenType.BUILTIN_TYPE],
     ['boolean', TokenType.BUILTIN_TYPE],
     ['null', TokenType.BUILTIN_TYPE],
+    ['undefined', TokenType.BUILTIN_TYPE],
     ['void', TokenType.BUILTIN_TYPE]
   ] satisfies Array<[string, TokenType]>
 

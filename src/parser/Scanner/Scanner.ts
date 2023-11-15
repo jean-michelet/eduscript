@@ -291,6 +291,10 @@ export default class Scanner implements ScannerInterface {
       }
     }
 
+    if (char === 'u' && this._followedBy('ndefined')) {
+      return this._createToken(TokenType.BUILTIN_TYPE)
+    }
+
     if (char === 'v' && this._followedBy('oid')) {
       return this._createToken(TokenType.BUILTIN_TYPE)
     }
