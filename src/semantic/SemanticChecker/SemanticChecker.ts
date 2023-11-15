@@ -13,10 +13,11 @@ import Env from '../../Env/Env.js'
 import VariableDeclaration from '../../parser/Nodes/Statement/VariableDeclaration.js'
 import Identifier from '../../parser/Nodes/Expression/Identifier.js'
 import { TypeAnnotation } from '../../parser/Nodes/Expression/TypeAnnotation.js'
-import { NodeSourceContext } from '../../parser/Nodes/AbstractNode.js'
+import AbstractNode from '../../parser/Nodes/AbstractNode.js'
 import { Context } from '../../ContextStack/ContextStack.js'
 import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
 import { Symbol_ } from '../../Env/Scope.js'
+import AssignmentExpression from '../../parser/Nodes/Expression/AssignmentExpression.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -87,6 +88,18 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       return this._checkExpr(expr.expression)
     }
 
+    if (expr instanceof AssignmentExpression) {
+      const left = this._checkExpr(expr.left)
+      const right = this._checkExpr(expr.right)
+      this._checkExpectedType(
+        left.name,
+        right,
+        expr
+      )
+
+      return right
+    }
+
     throw new Error('Unexpected Expression of type ' + expr.type.toString())
   }
 
@@ -103,8 +116,8 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     const type = this._checkExpr(varStmt.typeAnnotation)
     const init: Type = (varStmt.init !== null) ? this._checkExpr(varStmt.init) : new Type(type.name)
 
-    if ((varStmt.init != null) && type.name !== init.name) {
-      this._notAssignableType(type, init, varStmt.init.sourceContext)
+    if ((varStmt.init !== null)) {
+      this._checkExpectedType(type.name, init, varStmt.init)
     }
 
     this._env.getScope().define({
@@ -168,7 +181,9 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     return new Type('boolean')
   }
 
-  private _notAssignableType (left: Type, right: Type, sourceContext: NodeSourceContext): void {
-    this._errorManager.addTypeError(`Type '${right.name}' is not assignable to type '${left.name}'`, sourceContext)
+  private _checkExpectedType (expected: string, given: Type, node: AbstractNode): void {
+    if (expected !== given.name) {
+      this._errorManager.addTypeError(`Expected type '${expected}', given '${given.name}'`, node.sourceContext)
+    }
   }
 }

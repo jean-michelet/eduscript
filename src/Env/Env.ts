@@ -4,7 +4,7 @@ import Scope, { Symbol_ } from './Scope.js'
 export default class Env {
   private _scopePointer = 0
   private readonly _scopes: Map<number, Scope> = new Map()
-  private readonly _contextStack: ContextStack = new ContextStack()
+  public readonly contextStack: ContextStack = new ContextStack()
 
   resolve (id: string): Symbol_ | null {
     let scopePointer = this._scopePointer
@@ -21,7 +21,7 @@ export default class Env {
   }
 
   enterScope (context: Context = Context.BLOCK): void {
-    this._contextStack.enter(context)
+    this.contextStack.enter(context)
     this._scopes.set(++this._scopePointer, new Scope())
   }
 
@@ -31,7 +31,7 @@ export default class Env {
     }
 
     this._scopes.delete(this._scopePointer--)
-    this._contextStack.leave(context)
+    this.contextStack.leave(context)
   }
 
   getScope (): Scope {
