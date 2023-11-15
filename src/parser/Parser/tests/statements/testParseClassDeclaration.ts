@@ -73,15 +73,15 @@ export default function (): void {
 
     test('class declaration can have methods', () => {
       const src = `class Foo { 
-        fn myImplicitPulicMethod a: number {}
+        fn myImplicitPulicMethod a: number -> number {}
 
-        public fn myExplicitPulicMethod a: number {}
+        public fn myExplicitPulicMethod a: number -> number {}
 
-        protected fn myProtectedMethod a: number {}
+        protected fn myProtectedMethod a: number -> number {}
 
-        private fn myPrivateMethod a: number {}
+        private fn myPrivateMethod a: number -> number {}
 
-        static public fn myStaticMethod a: number {}
+        static public fn myStaticMethod a: number -> number {}
       }`
       const stmts = parseStatements(src)
 
@@ -104,7 +104,9 @@ export default function (): void {
 
   function expectMethod (method: MethodDefinition, id: string, visibility: CLASS_MEMBER_VISIBILITY, isStatic = false): void {
     expect(method).toBeInstanceOf(MethodDefinition)
+    expect(method.returnType.name).toBe('number')
     expect(method.params[0]).toBeInstanceOf(FunctionParameter)
+    expect(method.params[0].type.name).toBe('number')
     expectMember(method, id, visibility, isStatic)
   }
 

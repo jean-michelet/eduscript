@@ -9,7 +9,7 @@ import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
 export default function (): void {
   describe('Test parse ReturnStatement', () => {
     test('should parse a function with ReturnStatement', () => {
-      const src = `fn myFunction {
+      const src = `fn myFunction -> void {
         return 1;
       }`
       const stmts = parseStatements(src)
@@ -27,7 +27,7 @@ export default function (): void {
     })
 
     test('should parse a function with empty ReturnStatement', () => {
-      const src = `fn myFunction {
+      const src = `fn myFunction -> void {
         return;
       }`
       const stmts = parseStatements(src)
@@ -53,7 +53,7 @@ export default function (): void {
     test('should throw error if a ReturnStatement is not followed by ;', () => {
       expect(() => {
         parseStatements(`
-        fn myFunction {
+        fn myFunction -> void {
           return
         }
       `)
@@ -106,7 +106,7 @@ export default function (): void {
       expect(() => {
         parseStatements(`
           while true {
-            fn a {
+            fn a -> void {
               break;
             }
           }
@@ -171,7 +171,7 @@ export default function (): void {
       expect(() => {
         parseStatements(`
           while true {
-            fn a {
+            fn a -> void {
               continue;
             }
           }

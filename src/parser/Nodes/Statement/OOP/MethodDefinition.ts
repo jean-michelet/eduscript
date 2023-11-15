@@ -1,3 +1,4 @@
+import Type from '../../../../semantic/types/Type.js'
 import { NodeSourceContext, AST_NODE_TYPE } from '../../AbstractNode.js'
 import Identifier from '../../Expression/Identifier.js'
 import AbstractStatement from '../AbstractStatement.js'
@@ -8,6 +9,7 @@ import { CLASS_MEMBER_VISIBILITY } from './ClassBody.js'
 export default class MethodDefinition extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.METHOD_DEFINITION
   public readonly identifier: Identifier
+  public readonly returnType: Type
   public readonly params: FunctionParameter[]
   public readonly body: BlockStatement
   public readonly isStatic: boolean
@@ -16,6 +18,7 @@ export default class MethodDefinition extends AbstractStatement {
   constructor (
     sourceContext: NodeSourceContext,
     identifier: Identifier,
+    returnType: Type,
     params: FunctionParameter[],
     body: BlockStatement,
     isStatic: boolean,
@@ -23,6 +26,7 @@ export default class MethodDefinition extends AbstractStatement {
   ) {
     super(sourceContext)
     this.identifier = identifier
+    this.returnType = returnType
     this.params = params
     this.body = body
     this.isStatic = isStatic

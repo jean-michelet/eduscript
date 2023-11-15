@@ -52,7 +52,7 @@ export default class ClassBody extends AbstractStatement {
     if (parser.lookaheadHasType(TokenType.FN)) {
       const fn = FunctionDeclaration.fromParser(parser)
 
-      return new MethodDefinition(parser.endParsing(), fn.identifier, fn.params, fn.body, isStatic, visibility)
+      return new MethodDefinition(parser.endParsing(), fn.identifier, fn.returnType, fn.params, fn.body, isStatic, visibility)
     }
 
     const id = Identifier.fromParser(parser)
