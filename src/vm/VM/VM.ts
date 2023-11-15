@@ -26,7 +26,7 @@ export default class VM {
   private _execByte (opcode: number): void {
     switch (opcode) {
       case OP_HALT:
-        return // handle this operation
+        break
       default:
         throw new Error(`Unknown opcode ${opcode}`)
     }

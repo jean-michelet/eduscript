@@ -25,11 +25,11 @@ export interface SemanticCheckerInterface {
 }
 
 export default class SemanticChecker implements SemanticCheckerInterface {
-  private _errorHandler = new ErrorManager(new SourceFileManager(''))
+  private _errorManager = new ErrorManager(new SourceFileManager(''))
   private _env: Env = new Env()
 
   public check (program: Program): CheckedProgram {
-    this._errorHandler = new ErrorManager(program.source)
+    this._errorManager = new ErrorManager(program.source)
     this._env = new Env()
 
     this._env.enterScope(Context.TOP)
@@ -37,7 +37,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     this._env.leaveScope(Context.TOP)
 
     return new CheckedProgram(program, {
-      errors: this._errorHandler.errors
+      errors: this._errorManager.errors
     })
   }
 
@@ -93,11 +93,11 @@ export default class SemanticChecker implements SemanticCheckerInterface {
   private _checkVariableDeclaration (varStmt: VariableDeclaration): void {
     const id = varStmt.identifier.name
     if (this._env.getScope().has(id)) {
-      return this._errorHandler.addLogicError(`Cannot redeclare block-scoped variable '${id}'`, varStmt.sourceContext)
+      return this._errorManager.addLogicError(`Cannot redeclare block-scoped variable '${id}'`, varStmt.sourceContext)
     }
 
     if (varStmt.kind === 'const' && varStmt.init === null) {
-      this._errorHandler.addLogicError('\'const\' declarations must be initialized.', varStmt.identifier.sourceContext)
+      this._errorManager.addLogicError('\'const\' declarations must be initialized.', varStmt.identifier.sourceContext)
     }
 
     const type = this._checkExpr(varStmt.typeAnnotation)
@@ -117,7 +117,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
   private _checkVarAccess (id: Identifier): Type {
     const symbol: Symbol_ | null = this._env.resolve(id.name)
     if (symbol == null) {
-      this._errorHandler.addRefError(`${id.name} is not defined`, id.sourceContext)
+      this._errorManager.addRefError(`${id.name} is not defined`, id.sourceContext)
 
       return new Type('undefined')
     }
@@ -135,17 +135,17 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       case '*':
       case '/':
         if (left.name !== 'number' || right.name !== 'number') {
-          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
+          this._errorManager.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
         }
 
         if (expr.operator === '/' && right.value === 0) {
-          this._errorHandler.addLogicError('Division by zero is not allowed.', expr.sourceContext)
+          this._errorManager.addLogicError('Division by zero is not allowed.', expr.sourceContext)
         }
         return new Type('number')
       case '==':
       case '!=':
         if (left.name !== right.name) {
-          this._errorHandler.addTypeError(`Operator '${expr.operator}' requires operands of the same type, but got '${left.name}' and '${right.name}'`, expr.sourceContext)
+          this._errorManager.addTypeError(`Operator '${expr.operator}' requires operands of the same type, but got '${left.name}' and '${right.name}'`, expr.sourceContext)
         }
 
         break
@@ -154,14 +154,14 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       case '>=':
       case '<=':
         if (left.name !== 'number' || right.name !== 'number') {
-          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
+          this._errorManager.addTypeError(`Operator '${expr.operator}' can only be applied to 'number' types`, expr.sourceContext)
         }
 
         break
       case '&&':
       case '||':
         if (left.name !== 'boolean' || right.name !== 'boolean') {
-          this._errorHandler.addTypeError(`Operator '${expr.operator}' can only be applied to 'boolean' types`, expr.sourceContext)
+          this._errorManager.addTypeError(`Operator '${expr.operator}' can only be applied to 'boolean' types`, expr.sourceContext)
         }
     }
 
@@ -169,6 +169,6 @@ export default class SemanticChecker implements SemanticCheckerInterface {
   }
 
   private _notAssignableType (left: Type, right: Type, sourceContext: NodeSourceContext): void {
-    this._errorHandler.addTypeError(`Type '${right.name}' is not assignable to type '${left.name}'`, sourceContext)
+    this._errorManager.addTypeError(`Type '${right.name}' is not assignable to type '${left.name}'`, sourceContext)
   }
 }
