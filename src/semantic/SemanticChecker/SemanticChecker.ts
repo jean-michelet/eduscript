@@ -2,7 +2,7 @@ import BinaryExpression from '../../parser/Nodes/Expression/BinaryExpression.js'
 import LiteralExpression from '../../parser/Nodes/Expression/LiteralExpression.js'
 import Program from '../../parser/Nodes/Program.js'
 import AbstractCheckedProgram from '../AbstractCheckedProgram.js'
-import Type from '../Type.js'
+import Type from '../types/Type.js'
 import AbstractStatement from '../../parser/Nodes/Statement/AbstractStatement.js'
 import ExpressionStatement from '../../parser/Nodes/Statement/ExpressionStatement.js'
 import AbstractExpression from '../../parser/Nodes/Expression/AbstractExpression.js'
@@ -92,7 +92,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
         return this._checkVarAccess(expr.typedef)
       }
 
-      return new Type(expr.typedef)
+      return expr.typedef
     }
 
     if (expr instanceof BinaryExpression) {

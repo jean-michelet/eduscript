@@ -8,7 +8,7 @@ import { CLASS_MEMBER_VISIBILITY } from './ClassBody.js'
 export default class PropertyDefinition extends AbstractStatement {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.PROPERTY_DEFINITION
   public readonly identifier: Identifier
-  public readonly typedef: TypeAnnotation
+  public readonly typeAnnotation: TypeAnnotation
   public readonly init: AbstractExpression | null
   public readonly isStatic: boolean
   public readonly visibility: CLASS_MEMBER_VISIBILITY
@@ -16,7 +16,7 @@ export default class PropertyDefinition extends AbstractStatement {
   constructor (
     sourceContext: NodeSourceContext,
     id: Identifier,
-    typedef: TypeAnnotation,
+    typeAnnotation: TypeAnnotation,
     init: AbstractExpression | null,
     isStatic: boolean,
     visibility: CLASS_MEMBER_VISIBILITY
@@ -24,7 +24,7 @@ export default class PropertyDefinition extends AbstractStatement {
     super(sourceContext)
 
     this.identifier = id
-    this.typedef = typedef
+    this.typeAnnotation = typeAnnotation
     this.init = init
     this.isStatic = isStatic
     this.visibility = visibility

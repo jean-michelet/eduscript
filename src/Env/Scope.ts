@@ -1,5 +1,5 @@
 import { VariableKind } from '../parser/Nodes/Statement/VariableDeclaration.js'
-import Type from '../semantic/Type.js'
+import Type from '../semantic/types/Type.js'
 
 export interface Symbol_ {
   id: string

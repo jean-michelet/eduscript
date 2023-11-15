@@ -64,11 +64,11 @@ export default function (): void {
       const properties = (stmts[0] as ClassDeclaration).body.statements as PropertyDefinition[]
       expect(properties).toHaveLength(5)
 
-      expectProperty(properties[0], 'myImplicitPulicProp', CLASS_MEMBER_VISIBILITY.PUBLIC)
-      expectProperty(properties[1], 'myExplicitPulicProp', CLASS_MEMBER_VISIBILITY.PUBLIC)
-      expectProperty(properties[2], 'myProtectedProp', CLASS_MEMBER_VISIBILITY.PROTECTED)
-      expectProperty(properties[3], 'myPrivateProp', CLASS_MEMBER_VISIBILITY.PRIVATE)
-      expectProperty(properties[4], 'myStaticProp', CLASS_MEMBER_VISIBILITY.PUBLIC, true)
+      expectProperty(properties[0], 'myImplicitPulicProp', 'number', CLASS_MEMBER_VISIBILITY.PUBLIC)
+      expectProperty(properties[1], 'myExplicitPulicProp', 'number', CLASS_MEMBER_VISIBILITY.PUBLIC)
+      expectProperty(properties[2], 'myProtectedProp', 'number', CLASS_MEMBER_VISIBILITY.PROTECTED)
+      expectProperty(properties[3], 'myPrivateProp', 'number', CLASS_MEMBER_VISIBILITY.PRIVATE)
+      expectProperty(properties[4], 'myStaticProp', 'number', CLASS_MEMBER_VISIBILITY.PUBLIC, true)
     })
 
     test('class declaration can have methods', () => {
@@ -108,12 +108,12 @@ export default function (): void {
     expectMember(method, id, visibility, isStatic)
   }
 
-  function expectProperty (property: PropertyDefinition, id: string, visibility: CLASS_MEMBER_VISIBILITY, isStatic = false): void {
+  function expectProperty (property: PropertyDefinition, id: string, type: string, visibility: CLASS_MEMBER_VISIBILITY, isStatic = false): void {
     expect(property).toBeInstanceOf(PropertyDefinition)
     if (property.init !== null) {
       expect(property.init?.type).toBe(AST_NODE_TYPE.LITERAL_EXPRESSION)
     }
-
+    expect(property.typeAnnotation.typedef.name).toBe(type)
     expectMember(property, id, visibility, isStatic)
   }
 

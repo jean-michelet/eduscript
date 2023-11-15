@@ -46,6 +46,9 @@ export default function (): void {
       const myFunction2 = stmts[1] as FunctionDeclaration
       expect(myFunction2.identifier.name).toBe('myFunction2')
       expect(myFunction2.params).toHaveLength(2)
+      myFunction2.params.forEach(param => {
+        expect(param.type.typedef.name).toBe('number')
+      })
     })
   })
 }

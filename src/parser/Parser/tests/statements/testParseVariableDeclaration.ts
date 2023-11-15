@@ -1,5 +1,6 @@
+import ArrayType from '../../../../semantic/types/ArrayType.js'
+import TypeRef from '../../../../semantic/types/TypeRef.js'
 import BinaryExpression from '../../../Nodes/Expression/BinaryExpression.js'
-import Identifier from '../../../Nodes/Expression/Identifier.js'
 import LiteralExpression from '../../../Nodes/Expression/LiteralExpression.js'
 import VariableDeclaration from '../../../Nodes/Statement/VariableDeclaration.js'
 import { expectSourceContext, parseStatements, testThrowErrorIfNotFollowedBySemiColon } from '../Parser.test.js'
@@ -7,30 +8,41 @@ import { expectSourceContext, parseStatements, testThrowErrorIfNotFollowedBySemi
 export default function (): void {
   describe('Test parse VariableDeclaration', () => {
     test('should parse a variable declaration', () => {
-      const src = 'let a: boolean;'
+      const src = 'let a: boolean; let a: Foo[] = 1;'
       const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(VariableDeclaration)
-      expectSourceContext(stmts[0], {
-        endTokenPos: src.length
-      })
-
-      const expr = stmts[0] as VariableDeclaration
+      let expr = stmts[0] as VariableDeclaration
       expect(expr.identifier.name).toBe('a')
-      expect(expr.typeAnnotation.typedef).toBe('boolean')
+      expect(expr.typeAnnotation.typedef.name).toBe('boolean')
       expect(expr.kind).toBe('let')
       expect(expr.init).toBe(null)
+
+      expectSourceContext(expr, {
+        endTokenPos: 'let a: boolean;'.length
+      })
+
+      expr = stmts[1] as VariableDeclaration
+      expect(expr.typeAnnotation.typedef).toBeInstanceOf(ArrayType)
+      expect((expr.typeAnnotation.typedef as ArrayType).type).toBeInstanceOf(TypeRef)
+      expect(expr.typeAnnotation.typedef.name).toBe('Foo[]')
+      expect((expr.init as LiteralExpression).literal).toBe(1)
+      expectSourceContext(expr, {
+        startTokenPos: 'let a: boolean;'.length + 1,
+        endTokenPos: src.length
+      })
     })
 
-    test('should parse a variable declaration with assignment', () => {
+    test('should parse variable declarations with assignment', () => {
       const stmts = parseStatements('let a: Foo = 1;')
+
       expect(stmts).toHaveLength(1)
 
       expect(stmts[0]).toBeInstanceOf(VariableDeclaration)
-      expect(stmts).toHaveLength(1)
 
       const expr = stmts[0] as VariableDeclaration
-      expect(expr.typeAnnotation.typedef).toBeInstanceOf(Identifier)
+      expect(expr.typeAnnotation.typedef).toBeInstanceOf(TypeRef)
+      expect(expr.typeAnnotation.typedef.name).toBe('Foo')
       expect((expr.init as LiteralExpression).literal).toBe(1)
     })
 
