@@ -23,6 +23,8 @@ import FunctionType from '../types/FunctionType.js'
 import AssignmentPattern from '../../parser/Nodes/Expression/AssignmentPattern.js'
 import ReturnStatement from '../../parser/Nodes/Statement/JumpStatement/ReturnStatement.js'
 import FunctionScope from '../../Env/FunctionScope.js'
+import CallExpression from '../../parser/Nodes/Expression/CallExpression.js'
+import MemberExpression from '../../parser/Nodes/Expression/MemberExpression.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -190,7 +192,52 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       return this._checkAssignement(expr)
     }
 
+    if (expr instanceof CallExpression) {
+      return this._checkCall(expr)
+    }
+
     throw new Error('Unexpected Expression of type ' + expr.type.toString())
+  }
+
+  private _checkCall(expr: CallExpression): Type {
+    // need to check member call expr after OOP chekcing implementation
+    if (expr.callee instanceof MemberExpression) {
+      return new Type('undefined')
+    }
+
+    const id = expr.callee
+
+    const symbol: Symbol_ | null = this._env.resolve(id.name)
+    if (symbol == null) {
+      return this._undefinedRef(id)
+    }
+
+    if (!(symbol.type instanceof FunctionType)) {
+      this._errorManager.addTypeError(`'${id.name}: ${symbol.type.name}' is not a function`, expr.sourceContext)
+      return new Type('undefined')
+    }
+
+    const params = symbol.type.parameters
+    this._checkArity(params, expr.args, expr)
+    for (let i = 0; i < params.length; i++) {
+      // we can't check arguments that haven't been passed
+      if (!expr.args[i]) {
+        break
+      }
+
+      this._checkExpectedType(params[i].name, this._checkExpr(expr.args[i]), expr.args[i])
+    }
+
+    return symbol.type.returnType
+  }
+
+  private _checkVarAccess (id: Identifier): Type {
+    const symbol: Symbol_ | null = this._env.resolve(id.name)
+    if (symbol == null) {
+      return this._undefinedRef(id)
+    }
+
+    return symbol.type
   }
 
   private _checkAssignement (expr: AssignmentExpression | AssignmentPattern): Type {
@@ -203,17 +250,6 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     )
 
     return right
-  }
-
-  private _checkVarAccess (id: Identifier): Type {
-    const symbol: Symbol_ | null = this._env.resolve(id.name)
-    if (symbol == null) {
-      this._errorManager.addRefError(`${id.name} is not defined`, id.sourceContext)
-
-      return new Type('undefined')
-    }
-
-    return symbol.type
   }
 
   private _checkBinaryExpression (expr: BinaryExpression): Type {
@@ -264,4 +300,17 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       this._errorManager.addTypeError(`Expected type '${expected}', given '${given.name}'`, node.sourceContext)
     }
   }
+
+  private _undefinedRef(id: Identifier): Type {
+    this._errorManager.addRefError(`${id.name} is not defined`, id.sourceContext)
+
+    return new Type('undefined')
+  }
+
+  private _checkArity(expected: Type[], given: AbstractNode[], node: AbstractNode) {
+    if (expected.length !== given.length) {
+      this._errorManager.addLogicError(`Expected ${expected.length} arguments, but got ${given.length}`, node.sourceContext)
+    }
+  }
 }
+
