@@ -55,8 +55,6 @@ export default function (): void {
 
       expect(checkedAst.report.errors).toHaveLength(0)
     })
-
-    test.skip('should correctly handle function calls', () => {})
   })
 
   describe('Function call handling', () => {

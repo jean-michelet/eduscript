@@ -1,10 +1,11 @@
 import AbstractExpression from '../../parser/Nodes/Expression/AbstractExpression.js'
+import BinaryExpression, { BinaryOperator } from '../../parser/Nodes/Expression/BinaryExpression.js'
 import LiteralExpression, { Literal } from '../../parser/Nodes/Expression/LiteralExpression.js'
 import Program from '../../parser/Nodes/Program.js'
 import AbstractStatement from '../../parser/Nodes/Statement/AbstractStatement.js'
 import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
 import ExpressionStatement from '../../parser/Nodes/Statement/ExpressionStatement.js'
-import { OP_CONST, OP_HALT } from '../instruction-set.js'
+import { OP_ADD, OP_AND, OP_CONST, OP_DIV, OP_EQ, OP_GT, OP_GTE, OP_HALT, OP_LT, OP_LTE, OP_MUL, OP_NEQ, OP_OR, OP_SUB } from '../instruction-set.js'
 
 export class BytecodeProgram {
   public readonly instructions: Uint8Array
@@ -48,9 +49,60 @@ export default class BytecodeEmitter {
   }
 
   _emitExpr (expr: AbstractExpression): void {
+    if (expr instanceof BinaryExpression) {
+      this._emitBinaryExpr(expr)
+    }
+
     if (expr instanceof LiteralExpression) {
       this._push(OP_CONST)
       this._constants.push(expr.literal)
+    }
+  }
+
+  _emitBinaryExpr (expr: BinaryExpression): void {
+    this._emitExpr(expr.left)
+    this._emitExpr(expr.right)
+    this._emitBinaryOperator(expr.operator)
+  }
+
+  _emitBinaryOperator (op: BinaryOperator): void {
+    switch (op) {
+      case '+':
+        this._push(OP_ADD)
+        break
+      case '-':
+        this._push(OP_SUB)
+        break
+      case '*':
+        this._push(OP_MUL)
+        break
+      case '/':
+        this._push(OP_DIV)
+        break
+      case '>':
+        this._push(OP_GT)
+        break
+      case '<':
+        this._push(OP_LT)
+        break
+      case '>=':
+        this._push(OP_GTE)
+        break
+      case '<=':
+        this._push(OP_LTE)
+        break
+      case '==':
+        this._push(OP_EQ)
+        break
+      case '!=':
+        this._push(OP_NEQ)
+        break
+      case '&&':
+        this._push(OP_AND)
+        break
+      case '||':
+        this._push(OP_OR)
+        break
     }
   }
 
