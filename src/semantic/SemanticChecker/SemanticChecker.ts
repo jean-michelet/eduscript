@@ -199,7 +199,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     throw new Error('Unexpected Expression of type ' + expr.type.toString())
   }
 
-  private _checkCall(expr: CallExpression): Type {
+  private _checkCall (expr: CallExpression): Type {
     // need to check member call expr after OOP chekcing implementation
     if (expr.callee instanceof MemberExpression) {
       return new Type('undefined')
@@ -221,7 +221,7 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     this._checkArity(params, expr.args, expr)
     for (let i = 0; i < params.length; i++) {
       // we can't check arguments that haven't been passed
-      if (!expr.args[i]) {
+      if (typeof expr.args[i] === 'undefined') {
         break
       }
 
@@ -301,16 +301,15 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     }
   }
 
-  private _undefinedRef(id: Identifier): Type {
+  private _undefinedRef (id: Identifier): Type {
     this._errorManager.addRefError(`${id.name} is not defined`, id.sourceContext)
 
     return new Type('undefined')
   }
 
-  private _checkArity(expected: Type[], given: AbstractNode[], node: AbstractNode) {
+  private _checkArity (expected: Type[], given: AbstractNode[], node: AbstractNode): void {
     if (expected.length !== given.length) {
       this._errorManager.addLogicError(`Expected ${expected.length} arguments, but got ${given.length}`, node.sourceContext)
     }
   }
 }
-
