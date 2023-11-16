@@ -18,6 +18,11 @@ import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
 import { Symbol_ } from '../../Env/Scope.js'
 import AssignmentExpression from '../../parser/Nodes/Expression/AssignmentExpression.js'
 import IfStatement from '../../parser/Nodes/Statement/IfStatement.js'
+import FunctionDeclaration from '../../parser/Nodes/Statement/FunctionDeclaration.js'
+import FunctionType from '../types/FunctionType.js'
+import AssignmentPattern from '../../parser/Nodes/Expression/AssignmentPattern.js'
+import ReturnStatement from '../../parser/Nodes/Statement/JumpStatement/ReturnStatement.js'
+import FunctionScope from '../../Env/FunctionScope.js'
 
 class CheckedProgram extends AbstractCheckedProgram {}
 
@@ -54,8 +59,17 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       this._checkStmtList(stmt.statements)
       this._env.leaveScope()
     }
+
     if (stmt instanceof VariableDeclaration) {
-      this._checkVariableDeclaration(stmt)
+      this._checkVarDeclaration(stmt)
+    }
+
+    if (stmt instanceof FunctionDeclaration) {
+      this._checkFnDeclaration(stmt)
+    }
+
+    if (stmt instanceof ReturnStatement) {
+      this._checkReturnStmt(stmt)
     }
 
     if (stmt instanceof IfStatement) {
@@ -65,6 +79,80 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     if (stmt instanceof ExpressionStatement) {
       this._checkExpr(stmt.expression)
     }
+  }
+
+  private _checkReturnStmt (stmt: ReturnStatement): void {
+    if (!this._env.contextStack.isCurrentContext(Context.FUNCTION)) {
+      return this._errorManager.addLogicError("A 'return' statement can only be used within a function body", stmt.sourceContext)
+    }
+
+    const fnScope = this._env.getScope() as FunctionScope
+
+    const actualReturnType = (stmt.expression != null) ? this._checkExpr(stmt.expression) : new Type('void')
+
+    if (fnScope.returnType.name !== actualReturnType.name) {
+      this._errorManager.addTypeError(`Expected return type '${fnScope.returnType.name}', given '${actualReturnType.name}'`, (stmt.expression ?? stmt).sourceContext)
+    }
+  }
+
+  private _checkFnDeclaration (fnStmt: FunctionDeclaration): void {
+    const id = fnStmt.identifier.name
+    if (this._env.getScope().has(id)) {
+      return this._errorManager.addLogicError(`Duplicate function '${id}'`, fnStmt.sourceContext)
+    }
+
+    this._env.enterFunctionScope(fnStmt)
+    const params: Type[] = []
+    for (const param of fnStmt.params) {
+      let id: string
+
+      if (param.expr instanceof AssignmentPattern) {
+        id = param.expr.left.name
+      } else {
+        id = (param.expr).name
+      }
+
+      this._env.getScope().define({
+        id,
+        kind: 'let',
+        type: param.type
+      })
+
+      params.push(this._checkExpr(param.expr))
+    }
+
+    this._checkStmtList(fnStmt.body.statements)
+    this._env.leaveScope(Context.FUNCTION)
+
+    this._env.getScope().define({
+      id,
+      kind: 'function',
+      type: new FunctionType(params, fnStmt.returnType)
+    })
+  }
+
+  private _checkVarDeclaration (varStmt: VariableDeclaration): void {
+    const id = varStmt.identifier.name
+    if (this._env.getScope().has(id)) {
+      return this._errorManager.addLogicError(`Cannot redeclare block-scoped variable '${id}'`, varStmt.sourceContext)
+    }
+
+    if (varStmt.kind === 'const' && varStmt.init === null) {
+      this._errorManager.addLogicError('\'const\' declarations must be initialized.', varStmt.identifier.sourceContext)
+    }
+
+    const type = varStmt.typedef
+    const init: Type = (varStmt.init !== null) ? this._checkExpr(varStmt.init) : new Type(type.name)
+
+    if ((varStmt.init !== null)) {
+      this._checkExpectedType(type.name, init, varStmt.init)
+    }
+
+    this._env.getScope().define({
+      id,
+      kind: varStmt.kind,
+      type
+    })
   }
 
   private _checkIf (stmt: IfStatement): void {
@@ -98,10 +186,14 @@ export default class SemanticChecker implements SemanticCheckerInterface {
       return this._checkAssignement(expr)
     }
 
+    if (expr instanceof AssignmentPattern) {
+      return this._checkAssignement(expr)
+    }
+
     throw new Error('Unexpected Expression of type ' + expr.type.toString())
   }
 
-  private _checkAssignement (expr: AssignmentExpression): Type {
+  private _checkAssignement (expr: AssignmentExpression | AssignmentPattern): Type {
     const left = this._checkExpr(expr.left)
     const right = this._checkExpr(expr.right)
     this._checkExpectedType(
@@ -111,30 +203,6 @@ export default class SemanticChecker implements SemanticCheckerInterface {
     )
 
     return right
-  }
-
-  private _checkVariableDeclaration (varStmt: VariableDeclaration): void {
-    const id = varStmt.identifier.name
-    if (this._env.getScope().has(id)) {
-      return this._errorManager.addLogicError(`Cannot redeclare block-scoped variable '${id}'`, varStmt.sourceContext)
-    }
-
-    if (varStmt.kind === 'const' && varStmt.init === null) {
-      this._errorManager.addLogicError('\'const\' declarations must be initialized.', varStmt.identifier.sourceContext)
-    }
-
-    const type = varStmt.typedef
-    const init: Type = (varStmt.init !== null) ? this._checkExpr(varStmt.init) : new Type(type.name)
-
-    if ((varStmt.init !== null)) {
-      this._checkExpectedType(type.name, init, varStmt.init)
-    }
-
-    this._env.getScope().define({
-      id,
-      kind: varStmt.kind,
-      type
-    })
   }
 
   private _checkVarAccess (id: Identifier): Type {

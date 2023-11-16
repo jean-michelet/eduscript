@@ -1,4 +1,6 @@
 import ContextStack, { Context } from '../ContextStack/ContextStack.js'
+import FunctionDeclaration from '../parser/Nodes/Statement/FunctionDeclaration.js'
+import FunctionScope from './FunctionScope.js'
 import Scope, { Symbol_ } from './Scope.js'
 
 export default class Env {
@@ -23,6 +25,11 @@ export default class Env {
   enterScope (context: Context = Context.BLOCK): void {
     this.contextStack.enter(context)
     this._scopes.set(++this._scopePointer, new Scope())
+  }
+
+  enterFunctionScope (fnStmt: FunctionDeclaration): void {
+    this.contextStack.enter(Context.FUNCTION)
+    this._scopes.set(++this._scopePointer, new FunctionScope(fnStmt.returnType))
   }
 
   leaveScope (context: Context = Context.BLOCK): void {

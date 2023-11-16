@@ -1,18 +1,21 @@
-import { VariableKind } from '../parser/Nodes/Statement/VariableDeclaration.js'
 import Type from '../semantic/types/Type.js'
+
+export type SymboleKind = 'let' | 'const' | 'function' | 'class'
 
 export interface Symbol_ {
   id: string
   type: Type
-  kind: VariableKind
+  kind: SymboleKind
+  visibility?: 'public' | 'private' | 'protected'
+  isStatic?: boolean
 }
 
 export default class Scope {
-  private readonly _symbols: Map<string, Symbol_> = new Map()
+  protected readonly _symbols: Map<string, Symbol_> = new Map()
 
   define (symbol: Symbol_): void {
     if (this._symbols.has(symbol.id)) {
-      throw new Error(`Variable '${symbol.id}' has already been declared in this scope.`)
+      throw new Error(`Id '${symbol.id}' is already in use in this scope.`)
     }
 
     this._symbols.set(symbol.id, symbol)
