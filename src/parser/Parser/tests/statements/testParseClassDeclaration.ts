@@ -73,15 +73,15 @@ export default function (): void {
 
     test('class declaration can have methods', () => {
       const src = `class Foo { 
-        fn myImplicitPulicMethod a: number -> number {}
+        fn myImplicitPulicMethod(a: number) -> number {}
 
-        public fn myExplicitPulicMethod a: number -> number {}
+        public fn myExplicitPulicMethod(a: number) -> number {}
 
-        protected fn myProtectedMethod a: number -> number {}
+        protected fn myProtectedMethod(a: number) -> number {}
 
-        private fn myPrivateMethod a: number -> number {}
+        private fn myPrivateMethod(a: number) -> number {}
 
-        static public fn myStaticMethod a: number -> number {}
+        static public fn myStaticMethod(a: number) -> number {}
       }`
       const stmts = parseStatements(src)
 

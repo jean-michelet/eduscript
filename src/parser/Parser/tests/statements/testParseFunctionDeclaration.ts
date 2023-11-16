@@ -5,7 +5,7 @@ import { expectSourceContext, parseStatements } from '../Parser.test.js'
 export default function (): void {
   describe('Test parse FunctionDeclaration', () => {
     test('should parse a function declaration without parameters', () => {
-      const src = 'fn myFunction -> void {}'
+      const src = 'fn myFunction() -> void {}'
       const stmts = parseStatements(src)
 
       expect(stmts[0]).toBeInstanceOf(FunctionDeclaration)
@@ -22,8 +22,8 @@ export default function (): void {
     })
 
     test('should parse a function declaration with parameters', () => {
-      const fnSrc1 = 'fn myFunction a: number -> void {}'
-      const fnSrc2 = 'fn myFunction2 a: number, b: number = 1 + 1 -> void {}'
+      const fnSrc1 = 'fn myFunction (a: number) -> void {}'
+      const fnSrc2 = 'fn myFunction2 (a: number, b: number = 1 + 1) -> void {}'
 
       const stmts = parseStatements(fnSrc1 + fnSrc2)
 

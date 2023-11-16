@@ -38,8 +38,9 @@ export default class FunctionDeclaration extends AbstractStatement {
     parser.consume(TokenType.FN)
     const identifier = Identifier.fromParser(parser)
 
+    parser.consume(TokenType.LEFT_PAREN)
     const params: FunctionParameter[] = []
-    while (!parser.lookaheadHasType(TokenType.ARROW)) {
+    while (!parser.lookaheadHasType(TokenType.RIGHT_PAREN)) {
       parser.startParsing()
       let expr: Identifier | AssignmentPattern = Identifier.fromParser(parser)
       const type = parser.parseType()
@@ -59,6 +60,8 @@ export default class FunctionDeclaration extends AbstractStatement {
 
       parser.consume(TokenType.COMA)
     }
+
+    parser.consume(TokenType.RIGHT_PAREN)
 
     const returnType = parser.parseType(TokenType.ARROW)
 
