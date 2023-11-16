@@ -60,5 +60,9 @@ export default function (): void {
         expect(result).toBe(expected)
       })
     })
+
+    test('should evaluate complex binary expression', () => {
+      expect(vmExec('(1 + 2) * 2 + (6 / 3);')).toBe(8)
+    })
   })
 }

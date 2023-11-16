@@ -1,6 +1,7 @@
 import AbstractExpression from '../../parser/Nodes/Expression/AbstractExpression.js'
 import BinaryExpression, { BinaryOperator } from '../../parser/Nodes/Expression/BinaryExpression.js'
 import LiteralExpression, { Literal } from '../../parser/Nodes/Expression/LiteralExpression.js'
+import ParenthesizedExpression from '../../parser/Nodes/Expression/ParenthesizedExpression.js'
 import Program from '../../parser/Nodes/Program.js'
 import AbstractStatement from '../../parser/Nodes/Statement/AbstractStatement.js'
 import BlockStatement from '../../parser/Nodes/Statement/BlockStatement.js'
@@ -51,11 +52,13 @@ export default class BytecodeEmitter {
   _emitExpr (expr: AbstractExpression): void {
     if (expr instanceof BinaryExpression) {
       this._emitBinaryExpr(expr)
-    }
-
-    if (expr instanceof LiteralExpression) {
+    } else if (expr instanceof ParenthesizedExpression) {
+      this._emitExpr(expr.expression)
+    } else if (expr instanceof LiteralExpression) {
       this._push(OP_CONST)
       this._constants.push(expr.literal)
+    } else {
+      throw new Error(`Not implemented expression ${expr.type.toString()}`)
     }
   }
 
