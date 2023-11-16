@@ -44,12 +44,6 @@ export default function (): void {
       expect((returnStmt as ReturnStatement).expression).toBeNull()
     })
 
-    test('should throw error when a ReturnStatement is outside a function', () => {
-      expect(() => {
-        parseStatements('return 1;')
-      }).toThrow(new SyntaxError('"return" outside a function.'))
-    })
-
     test('should throw error if a ReturnStatement is not followed by ;', () => {
       expect(() => {
         parseStatements(`

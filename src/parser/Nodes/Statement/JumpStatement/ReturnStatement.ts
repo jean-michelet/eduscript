@@ -1,4 +1,3 @@
-import { Context } from '../../../../ContextStack/ContextStack.js'
 import AbstractNodeParser from '../../../Parser/AbstractNodeParser.js'
 import { TokenType } from '../../../Scanner/Token.js'
 import { AST_NODE_TYPE, NodeSourceContext } from '../../AbstractNode.js'
@@ -16,10 +15,6 @@ export default class ReturnStatement extends AbstractStatement {
 
   static fromParser (parser: AbstractNodeParser): ReturnStatement {
     parser.startParsing()
-    if (!parser.contextStack.inContext(Context.FUNCTION)) {
-      throw new SyntaxError('"return" outside a function.')
-    }
-
     parser.consume(TokenType.RETURN)
 
     let expr: AbstractExpression | null = null
