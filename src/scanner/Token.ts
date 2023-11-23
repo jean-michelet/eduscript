@@ -1,13 +1,31 @@
 export type TokenValue = string | number | null | undefined | boolean
 
-export interface Token {
-  type: TokenType
-  lexeme: string
-  value: TokenValue
-  startLine: number
-  endLine: number
-  startPos: number
-  endPos: number
+export class Token {
+  public readonly type: TokenType
+  public readonly lexeme: string
+  public readonly value: TokenValue
+  public readonly startLine: number
+  public readonly endLine: number
+  public readonly startPos: number
+  public readonly endPos: number
+
+  constructor (
+    type: TokenType,
+    lexeme: string,
+    value: TokenValue,
+    startLine: number,
+    endLine: number,
+    startPos: number,
+    endPos: number
+  ) {
+    this.type = type
+    this.lexeme = lexeme
+    this.value = value
+    this.startLine = startLine
+    this.endLine = endLine
+    this.startPos = startPos
+    this.endPos = endPos
+  }
 }
 
 export enum TokenType {
@@ -29,7 +47,7 @@ export enum TokenType {
   MULTIPLICATIVE = 'MULTIPLICATIVE',
 
   // relational operators
-  NOT = 'EQUAL',
+  NOT = 'NOT',
   EQUAL = 'EQUAL',
   NOT_EQUAL = 'NOT_EQUAL',
   GREATER_THAN = 'GREATER_THAN',

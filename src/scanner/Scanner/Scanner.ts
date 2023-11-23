@@ -448,14 +448,14 @@ export default class Scanner implements ScannerInterface {
       this._endTokenPos
     )
 
-    return {
+    return new Token(
       type,
-      lexeme: lexeme.trim(),
+      lexeme,
       value,
-      startLine: this._startLine,
-      endLine: this._endLine,
-      startPos: this._startTokenPos,
-      endPos: this._endTokenPos
-    }
+      this._startLine,
+      this._endLine,
+      this._startTokenPos,
+      this._endTokenPos
+    )
   }
 }
