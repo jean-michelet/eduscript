@@ -1,5 +1,5 @@
 import { NodeSourceContext } from '../../parser/Nodes/AbstractNode.js'
-import SourceFileManager from '../../parser/Scanner/SourceFileManager/SourceFileManager.js'
+import SourceFileManager from '../../scanner/SourceFileManager/SourceFileManager.js'
 import ErrorManager from './ErrorManager.js'
 import * as matchers from 'jest-extended'
 expect.extend(matchers)

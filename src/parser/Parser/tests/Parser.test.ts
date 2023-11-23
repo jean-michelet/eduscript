@@ -1,5 +1,5 @@
 import Program from '../../Nodes/Program.js'
-import Scanner from '../../Scanner/Scanner.js'
+import Scanner from '../../../scanner/Scanner/Scanner.js'
 import Parser from '../Parser.js'
 import testImportStatements from './statements/testParseImportStatements.js'
 import testParseAssignmentExpression from './expressions/testParseAssignmentExpression.js'

@@ -3,7 +3,7 @@ import AbstractNodeParser from '../Parser/AbstractNodeParser.js'
 import AbstractNode, { AST_NODE_TYPE, NodeSourceContext } from './AbstractNode.js'
 import BlockStatement from './Statement/BlockStatement.js'
 import AbstractStatement from './Statement/AbstractStatement.js'
-import SourceFileManager from '../Scanner/SourceFileManager/SourceFileManager.js'
+import SourceFileManager from '../../scanner/SourceFileManager/SourceFileManager.js'
 
 export default class Program extends AbstractNode {
   public type: AST_NODE_TYPE = AST_NODE_TYPE.PROGRAM

@@ -8,7 +8,7 @@ import ExpressionStatement from '../../parser/Nodes/Statement/ExpressionStatemen
 import AbstractExpression from '../../parser/Nodes/Expression/AbstractExpression.js'
 import ParenthesizedExpression from '../../parser/Nodes/Expression/ParenthesizedExpression.js'
 import ErrorManager from '../ErrorManager/ErrorManager.js'
-import SourceFileManager from '../../parser/Scanner/SourceFileManager/SourceFileManager.js'
+import SourceFileManager from '../../scanner/SourceFileManager/SourceFileManager.js'
 import Env from '../../Env/Env.js'
 import VariableDeclaration from '../../parser/Nodes/Statement/VariableDeclaration.js'
 import Identifier from '../../parser/Nodes/Expression/Identifier.js'

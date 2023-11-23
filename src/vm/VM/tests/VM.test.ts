@@ -1,5 +1,5 @@
 import Parser from '../../../parser/Parser/Parser.js'
-import Scanner from '../../../parser/Scanner/Scanner.js'
+import Scanner from '../../../scanner/Scanner/Scanner.js'
 import BytecodeEmitter from '../../BytecodeEmitter/BytecodeEmitter.js'
 import VM, { VmValue } from '../VM.js'
 import testExecBinaryExpressions from './testExecBinaryExpressions.js'

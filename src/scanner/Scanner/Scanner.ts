@@ -1,5 +1,5 @@
-import SourceFileManager from './SourceFileManager/SourceFileManager.js'
-import { Token, TokenType, TokenValue } from './Token.js'
+import SourceFileManager from '../SourceFileManager/SourceFileManager.js'
+import { Token, TokenType, TokenValue } from '../Token.js'
 
 export interface ScannerInterface {
   getSource: () => SourceFileManager

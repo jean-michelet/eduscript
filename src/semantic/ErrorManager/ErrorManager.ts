@@ -1,5 +1,5 @@
 import { NodeSourceContext } from '../../parser/Nodes/AbstractNode.js'
-import SourceFileManager from '../../parser/Scanner/SourceFileManager/SourceFileManager.js'
+import SourceFileManager from '../../scanner/SourceFileManager/SourceFileManager.js'
 
 export default class ErrorManager {
   public readonly errors: Error[] = []

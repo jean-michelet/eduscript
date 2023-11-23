@@ -1,5 +1,5 @@
 import Program from '../Nodes/Program.js'
-import { ScannerInterface } from '../Scanner/Scanner.js'
+import { ScannerInterface } from '../../scanner/Scanner/Scanner.js'
 import AbstractNodeParser from './AbstractNodeParser.js'
 
 export interface ParserInterface {

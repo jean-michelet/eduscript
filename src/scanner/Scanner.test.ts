@@ -1,4 +1,4 @@
-import Scanner from './Scanner.js'
+import Scanner from './Scanner/Scanner.js'
 import { Token, TokenType } from './Token.js'
 
 describe('Scanner Tests', () => {
