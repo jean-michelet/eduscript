@@ -64,3 +64,7 @@ node_modules/
 
 # folder to tests features
 /src/work
+
+
+# ignore courses for now
+/courses
